@@ -32,8 +32,8 @@ app.locals._ = _;
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use("/static", express.static(__dirname + "public"));
-app.use("/static", express.static(__dirname + "images"));
+app.use("/static", express.static(__dirname + "/public"));
+app.use("/static", express.static(__dirname + "/images"));
 app.use(flash());
 
 app.use(session({
