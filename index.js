@@ -12,6 +12,7 @@ var bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var _ = require("lodash");
 const passport = require("passport");
+const passport2 = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const findorcreate = require("mongoose-findorcreate");
 const session = require("express-session");
@@ -34,8 +35,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "/public")));
-// app.use("/auth", express.static(path.join(__dirname, "public")));
-// app.use("/topicwiselist", express.static(path.join(__dirname, "public")));
 app.use(flash());
 
 app.use(session({
@@ -109,6 +108,18 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+passport2.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "https://dsa-organizer-6wz8.vercel.app/auth/google/userhome"
+  },
+  function(accessToken, refreshToken, email, cb) {
+    userModel.findOrCreate({ email : email._json.email, googleid: email.id, name: email.displayName}, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
+
 app.get("/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] }));
 
@@ -133,7 +144,18 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     userModel.findOrCreate({ name: profile.displayName, githubid: profile.id }, function (err, user) {
-    //   console.log(profile);
+      return done(err, user);
+    });
+  }
+));
+
+passport2.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "https://dsa-organizer-6wz8.vercel.app/auth/github/userhome"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    userModel.findOrCreate({ name: profile.displayName, githubid: profile.id }, function (err, user) {
       return done(err, user);
     });
   }
