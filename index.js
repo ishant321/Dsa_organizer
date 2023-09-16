@@ -33,8 +33,9 @@ app.locals._ = _;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, "public")));
-console.log(path.join(__dirname, "public"));
+app.use(express.static(path.join(__dirname, "/public")));
+// app.use("/auth", express.static(path.join(__dirname, "public")));
+// app.use("/topicwiselist", express.static(path.join(__dirname, "public")));
 app.use(flash());
 
 app.use(session({
