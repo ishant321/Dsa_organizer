@@ -18,6 +18,7 @@ const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const flash = require("connect-flash");
+var path = require("path");
 require("dotenv").config();
 //---------------------------------------------------------
 
@@ -29,11 +30,11 @@ require("dotenv").config();
 var app = express();
 app.locals._ = _;
 
-app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use("/static", express.static(__dirname + "public"));
-app.use("/static", express.static(__dirname + "images"));
+app.use(express.static(path.join(__dirname, "public")));
+console.log(path.join(__dirname, "public"));
 app.use(flash());
 
 app.use(session({
@@ -50,7 +51,7 @@ app.use(passport.session());
 
 
 //------------- DATABASE CONNECTIONS ------------------------
-mongoose.connect("mongodb+srv://ishant:mongodbatlas@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
+mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
 
 const topicSchema = new mongoose.Schema({
     topicname: String,
