@@ -29,7 +29,7 @@ https://dsa-organizer-6wz8.vercel.app/
 
 ## Screenshots
 ### Home page
-![Screenshot 2023-09-19 230257](https://github.com/ishant321/Dsa_organizer/assets/82669824/c07499b8-e7c9-4e37-98f5-5392aafda7b4 | width=100)
+![Screenshot 2023-09-19 230257](https://github.com/ishant321/Dsa_organizer/assets/82669824/c07499b8-e7c9-4e37-98f5-5392aafda7b4)
 
 
 
