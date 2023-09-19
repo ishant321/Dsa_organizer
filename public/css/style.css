@@ -1,5 +1,30 @@
-*{
-    background-color: #3AAFA9;
+:root{
+    --color-100: #FEFFFF;
+    --color-200: #DEF2F1;
+    --color-400: #47d5ce;
+    --color-500: #2B7A78;
+    --color-900: #17252A;
+}
+html{
+    font-size: 62.5%;
+}
+
+
+
+/* ------------ CONTENT ------------ */
+/* 
+- GENERAL
+- HEADER
+-
+-
+-
+-
+-
+- RESPONSIVE
+ */
+/* ----------------------------------- */
+
+*{  
     margin: 0;
     padding: 0;
     font-family: "Trirong", serif;
@@ -7,765 +32,1066 @@
     color: white;
 }
 
-/* --------------- GENERAL ----------------- */
+body{
+    background-color: var(--color-400);
+}
 
-.btn{
-    background-color: #17252A;
-    color: rgb(255, 255, 255);
+/* -------------- GENERAL ----------------- */
+
+.font-btn{
+   
+}
+
+.form-btn button{
+    padding: 0.3em 1.6em;
+    font-size: 2rem;
     border: none;
-    border-radius: 5px;
-    width: 150%;
-    height: 40px;
-    font-size: calc(0.1vw + 3.2vmin);
-    height: calc(1.2vw  + 4.7vmin);
+    border-radius: 10px;
+    background-color: var(--color-900);
+    transition-duration: 700ms;
 }
 
-
-.bg{
-    height: 700px;
-    width: 99%;
-    background-color: #222233;
-    margin: auto;
-}
-input::placeholder{
-    margin: auto;
+.form-btn button:hover{
+    background-color: white;
     color: black;
-    font-weight: 900;
+}
+
+.main{
+    width: 98%;
+    background-color: var(--color-500);
+    display: flex;
+    margin: auto;
+    min-height: 100vh;
+}
+.mid{
+    width: 100%;
 }
 
 .flash{
-    background-color: transparent;
-    align-items: center;    
+    font-size: 1.4rem;
 }
-
-/* ------------------------------------------ */
-
-/* --------------- HEADER & FOOTER ---------------- */
+/* -------------- HEADER -------------------- */
 
 .header{
-    width: 99%;
-    height: calc(1vw + 3vh + 6vmin);
-    background-color: #2B7A78;
-    margin: 7px auto ;
+    position: sticky;
+    top:0;
+    max-width: 98%;
+    margin: 1em auto;
     display: flex;
     flex-direction: row;
+    justify-content:space-between;
+    background-color: var(--color-500);
+    min-height: 15px;
 }
 
 .header form{
-    background-color: transparent;
-    margin: auto auto auto 10px;
-    border-radius: 30px;
+    margin: 0.7em;
 }
 
-.header h1{
+.main-logo{
+    background-color: transparent;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-right: 20px;
-    background-color: transparent;
-    font-size: calc(2vw + 2vmin);
-    letter-spacing: 5px;
-    -webkit-text-stroke-width: 1px;
-    color: 3AAFA9;
-    -webkit-text-stroke-color: white;
+    margin-right: 1em;
+    font-size: 1.5em;
+    animation: rotate 1s cubic-bezier(0.5, 1, 1, 1);
 }
 
+@keyframes rotate{
+    from{
+        transform: translateX(-100px);
+    }
+    to{
+        transform: translateX(0);
+    }
+}
+
+.main-logo h1{
+    letter-spacing: 0.3em;
+}
+
+.main-logo> h1:first-of-type{
+    color: var(--color-400);
+}
+
+/* ------------ FOOTER ------------ */
 
 .footer{
-    width: 99%;
-    height: 160px;
-    background-color: rgb(0, 102, 111);
-    margin: 7px auto;
+    width: 98%;
+    margin: 0.7em auto auto auto;
+    background-color: #2B7A78;
+    height: 20rem;
     display: flex;
     align-items: end;
     justify-content: center;
+    font-size: 1.5rem;
 }
 
-
-/* ------------------------------------------------ */
-
-
-/* --------------- COMMON HOME ----------------- */
-
-/* ---------- COMMON HOME LEFT -------------- */
-.mid{
-    display: flex;
-    flex-direction: row;
+.footer p{
+    position: relative;
     background-color: transparent;
-    height: fit-content;
-    margin: 20px auto;
-    min-height: 100px;
-    overflow: hidden;
+    font-size: 0.9em;
+    color: black;
+}
+
+/* ------------ COMMON HOME ------------ */
+
+.common-home-main{
+    min-height: fit-content;
+    max-width: 98%;
+    background-color: var(--color-500);
+    margin: auto;
+    display: flex;
 }
 
 .common-home-left{
     width: 55%;
-    margin: 1% 1% 1% 1%;
-    background-color: #3AAFA9;
-    border-radius: 0px 100% 100% 0px;
+    height: 50px;
+    border-radius: 0 100% 100% 0;
+    margin: 4em 0.7em 4em 4em;
+    background-color: var(--color-400);
+    min-height: 70rem;
     display: flex;
-    justify-content:left;
-    min-height: 100px;
-    overflow: hidden;
+    align-items: center;
+    justify-content: center;
 }
+
 .common-home-left-inner{
-    border-radius: 10% 100% 100% 10%; 
     width: 70%;
-    height: 70%; 
-    background-color: #2B7A78; 
-    margin: 18% auto;
-    display: flex;
-    justify-content:left;
-    min-height: 100px;
-    overflow: hidden;
+    height: 70%;
+    background-color: var(--color-500);
+    border-radius: 0 100% 100% 0;
 }
 
 .logo-text{
-    width: 98%;
-    height: 80%;
-    background-color: transparent;
-    margin: auto;
-    transition: all 0.3s 0s ease;
-}
-
-.logo-text h1{
-    font-size: calc(11vw + 5vmin);
-    background-color: transparent;
-    letter-spacing: 15px;
-    font-family: Geneva, sans-serif;
-    -webkit-text-stroke-width: calc(0.7vw + 0.3vmin);
+    max-width: 90%;;
+    height: 90%;
+    margin: 1em auto auto 0em;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    -webkit-text-stroke-width: calc(0.05rem + 0.05rem);
     color: transparent;
     -webkit-text-stroke-color: #47d5ce;
-    padding-bottom: 0;
-    display: flex;
-    justify-content: center;
+    transition: all 150ms ease-in-out;
 }
 
 .logo-text:hover{
-    text-shadow: 0 0 6px #3AAFA9, 0 0 13px #3AAFA9, 0 0 1px #3AAFA9, 0 0 17px #3AAFA9, 0 0 9px #0fa, 0 0 7px #0fa, 0 0 6px #0fa;
+    text-shadow: 0 0 0.6rem #3AAFA9, 0 0 1.3rem #3AAFA9, 0 0 0.1rem #3AAFA9, 0 0 1.7rem #3AAFA9, 0 0 0.9rem #0fa, 0 0 0.7rem #0fa, 0 0 0.9rem #0fa;
+}
+
+.logo-text h1{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14vw;
+    -webkit-text-stroke-width: 1rem;
+    -webkit-text-stroke-color: var(--color-400);
+    color: var(--color-500);
+    margin-top: 4rem;
 }
 
 .logo-text h2{
-    font-size: calc(2.2vw + 1vmin);
-    letter-spacing: calc(1.8vw + 1.4vmin);
-    font-weight: 950;
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    color: #47d5ce;
-    margin-top: -6%;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    letter-spacing: 2vw;
+    color: var(--color-400);
+    font-size: 3vw;
+    margin: -0.8em 0 0 0;
+    border-bottom: 0.4rem solid var(--color-400);
+    width: 100%;
+    padding: 0.8rem;
 }
 
 .about-it{
-    background-color: transparent;
-    border-top: 2px solid #47d5ce;
+    text-align: left;
+    width: 100%;
+    margin-top: 1em;
+    margin-left: 1em;
 }
 
 .about-it p{
-    background-color: transparent;
-    color:#47d5ce;
-    padding: 10px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    /* font-size: 1em; */
-    font-size: calc(1vw + 0.4vmin);
+    color: var(--color-400);
+    font-weight: 600;
+    font-size: 1.4em;
 }
 
-/* ------------ COMMON HOME LEFT END ------------------- */
-
-/* -------------- COMMON HOME RIGHT ----------------------- */
 .common-home-right{
-    width: 43%;
-    border-radius: 40px;
-    margin: 3px;
+    width: 45%;
+    border-radius: 6rem;
+    margin: 4em 4em 4em 0.7em;
+    min-height: 70rem;
     background-color: white;
-    display: flex;
-    flex-direction: column;
-    min-height: 100px;
-    overflow: hidden;
-    padding: 3%;
 }
 
-.common-home-right form, input, button{
-    background-color: transparent;
-}
-
-.common-home-right input, button{
+.common-home-right p{
     color: black;
+    width: 50%;
+    margin: 0.2em auto;
+    display: flex;
+    justify-content: center;
 }
 
-.local {
+.local{
     display: flex;
     flex-direction: column;
-    width: 70%;
-    margin: 30px auto auto auto;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    min-height: 100px;
-    overflow: hidden;
-}
-
-.local input{
-    border: none;
-    outline: none;
-    width: 90%;
-    height: 60px;
-    border-bottom: 3px solid black;
-    margin: 8% auto;
-    background-color: rgba(222, 242, 241, 0.3);
-    font-size: 1.2em;
+    width: 80%;
+    margin: 3em auto 0px auto;
+    min-height: 40rem;
+    padding: 2em 2em 0 2em;
 }
 
 .local h2{
-    background-color: transparent;
-    color: black;   
+    color: black;
+    font-size: 2rem;
+    margin: 0 auto;
+}
+
+.local input{
+    width: 70%;
+    margin: 1.5em auto;
+    min-height: 4em;
+    outline: none;
+    border: none;
+    border-bottom: 0.3em solid black;
+    background-color: var(--color-100);
+    font-size: 1.4rem;
+    color: black;
+    transition: 400ms;
+}
+
+.local input:hover{
+    border-bottom: 0.3em solid var(--color-400);
+    border-radius: 5px;
 }
 
 .local button{
-    width: 70%;
+    padding: 0.4em 2em;
+    border: 2px solid var(--color-400);
+    border-radius: 5px;
     margin: auto;
-    background-color: #44cfc8;
-    color: black;
-    border: 0.3px solid black;
-    font-weight: 700;
+    font-size: 1.7rem;
+    background-color: var(--color-400);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0px 0px 40px 40px var(--color-400) inset, 0 0 0 0 var(--color-400);
+    transition: all 150ms ease-in-out;
+}
+
+.local button:hover{
+    box-shadow: 0 0 20px 0px var(--color-400) inset, 0 0 10px 4px var(--color-400);
+    border: none;
 }
 
 .open{
+    width: 70%;
+    margin: auto;
+    padding: 0em 2em 2em 2em;
     display: flex;
     flex-direction: column;
-    margin: auto;
     align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    width: 70%;
-    min-height: 100px;
-    overflow: hidden;
 }
 
 .open h3{
     color: black;
-    margin: auto auto 10px auto;
-    font-size: .9em;
-    margin: 5% auto 5% auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: fit-content;
+    margin: 1em auto 1.5em auto;
 }
 
-.open form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+.open button{
+    margin-bottom: 1.5em; 
 }
 
-.open form button{
-    width: 75%;
-    border-radius: 0px 4px 4px 0px;
-    border: none;
-    font-weight: 600;
-    font-size: 1.05em;
-}
-
-.icon-button{
-    display: flex;
-    flex-direction: row;
-    width: 70%;
-    height: 40px;
+.open-btn{
     border: 1px solid black;
-    border-radius: 4px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0.7em 2em;
 }
 
+.open-btn button{
+    color: black;
+    border: none;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin: auto auto auto 1em;
+}
+
+.google-btn{
+    box-shadow: 0px 0px 40px 40px red inset, 0 0 0 0 red;
+    transition: all 150ms ease-in-out;
+}
+
+.google-btn:hover{
+    box-shadow: 0 0 20px 0px red inset, 0 0 10px 4px red;
+}
+
+.github-btn{
+    box-shadow: 0px 0px 40px 40px black inset, 0 0 0 0 black;
+    transition: all 150ms ease-in-out;
+}
+
+.github-btn:hover{
+    box-shadow: 0 0 20px 0px black inset, 0 0 10px 4px black;
+    border: none;
+}
+
+.google-btn, .google-btn button{
+    background-color: red;
+}
+
+.github-btn, .github-btn button{
+    background-color: black;
+    color: white;
+    border: 1px white;
+    font-weight: 500;
+}
 
 #icons{
-    background-color: transparent;
-    width: 30px;
-    height: 30px;
-    margin: 5px 5px;
+    width: 3rem;
+    border-right: 1px solid black;
 }
 
-/* ----------------- COMMON HOME END ------------------ */
 
-/* ------------------ FEATURE SECTION ----------------- */
+
+.sign-in{
+    background-color: transparent;
+    color: black;
+    border: none;
+    font-weight: 500;
+    display: flex;
+    justify-content: end;
+    margin-top: 2rem;
+    font-size: 1.4rem;
+}
+
+.sign-in:hover{
+    color: blue;
+}
 
 .main-feature-section{
-    width: 99%;
-    height: fit-content;
-    background-color: #2B7A78;
-    margin: 10px auto;
+    width: 98%;
+    background-color: var(--color-500);
+    margin: 1em auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .features{
     width: 70%;
-    height: 30%;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: transparent;
-    transition: all 0.2s 0s ease;
-}
-
-.features:hover{
-    /* box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); */
-    font-size: 1.1em;
+    margin: 7em 3em;
 }
 
 .feature-title{
-    font-size: 1.9em;
     width: fit-content;
     margin: auto;
-    background-color: transparent;
-    font-weight: 700;
+    font-size: 3rem;
 }
-
-.feature-title:first-letter{
-    color: #3AAFA9;
-  }
 
 .feature-content{
-    background-color: transparent;
     text-align: center;
+    font-size: 1.5rem;
 }
 
- li{
-    background-color: transparent;
+li{
+    font-size: 1.5rem;
 }
 
-/* ------------------------------------------------------- */
+/* ----------- LOGIN ----------- */
+.login-form{
+    min-height: 10em;
+    margin: 5rem auto;
+}
 
-.main{
-    width: 99%;
-    background-color: #2B7A78;
-    margin: auto;
+.login-form h2{
+    margin-top: 7rem;
+}
+
+.login-form a{
+    color: blue;
+    font-size: 1.5rem;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow: hidden;
-}
-
-/* --------- REMOVE QUESTION --------- */
-
-.rem-ques div{
-    margin: 7px auto;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    color: rgb(255, 255, 255);
-}
-.rem-ques{
-    border: 2px solid black;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: row;
-    margin: 5px auto;
-    width: 80%;
-    font-size: calc(1vw + 1vh + 1vmin);
-    min-width: 200px;
-    overflow-x: scroll;
-}
-
-.rem-question button{
-    font-size: calc(1vw + 1vh + 1vmin);
-}
-
-/* ---------- REMOVE QUESTION END ---------- */
-
-/* ----------- ADD TOPICS --------------- */
-
-.add-form{
-    margin: 250px auto;
-    width: 50%;
-    height: 20%;
-    padding: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-}
-
-.add-form input{
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 15px;
-    width: 80%;
-    height: 30%;
-    color: black;
-    outline: none;
-    font-size: calc(1vw + 1vh + 0.5vmin);
-    padding-left: 0.1%;
-    font-weight: 700;
-}
-.add-form button{
-    margin-top: 10px;
-    width: calc(4vw + 2vh + 3vmin);
-}
-
-/* ----------- ADD TOPICS END ----------- */
-
-/* ------- REMOVE TOPIC --------- */
-
-.rem-topic-mid{
-    width: 60%;
-    margin: 10px auto;
-    background-color: transparent;
-}
-
-.rem-topiclist{
-    width: 80%;
-    background-color: transparent    ;
-    display: flex;
-    flex-direction: row;
-    margin: 10px auto;
-    align-items: center;
-    justify-content: center;
-}
-
-.rem-topiclist div{
-    margin: 5px;
-    width: 50%;
-    border-radius: 10px;
-    height: calc(1vw + 3vh + 1vmin);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.rem-topiclist form{
-    background-color: transparent;
-}
-
-/* ---------- REMOVE TOPIC END --------- */
-
-/* --------- TOPICWISE LIST ------------- */
-
-.main table{
-    border-collapse: collapse;
-    max-width: 80%;
-    min-width: 600px;
-    overflow: scroll;
-    margin: 10px auto;
-    color: black;
-}
-
-.main th{
-    font-size: 1.3em;
-    letter-spacing: 2px;
-    height: 60px;
-    color: #17252A;
-}
-
-.main th div{
-    font-size: 1.3em;
-    color: #17252A;
-}
-
-.main td{
-    margin: auto;
-    overflow-x: hidden;
-    height: 40px;
-    white-space: nowrap;
-    text-align: center;
-    color: #17252A;
-    font-weight: 1000;
-}
-
-.main td div a{
-    color: #17252A;
-}
-
-.main table th,td{
-    border: 7px solid #2B7A78;
-}
-
-/* ----------- TOPICWISE LIST END ----------- */
-
-.addquestion{
-    border-radius: 10px;
-    width: 60%;
-    height: 50vh;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin: 40px auto;
-    background-color: transparent;
-}
-
-.addquestion input{
-    margin: 10px;
-    width: 70%;
-    height: calc(1vw + 1vh + 2vmin);
-    margin: 3% auto;
-    background-color: white;
-    border-radius: 10px;
-    color: black;
-    font-weight: 700;
-    padding-left: 10px;
-    font-size: calc(1vw + 1vh + 0.5vmin);
-    outline: none;
-}
-
-::placeholder{
-    padding-left: 10px;
-    opacity: 70%;
-}
-
-.addquestion button{
-    width: calc(4vw + 2vh + 3vmin);
-    margin: 2% auto;
-}
-
-/* ------------ USER HOME PAGE------------ */
-
-
-.userhome-mid{
-    width: 70%;
-    margin: 10px auto;
-    font-size: calc(1vw + 1.1vmin);
-    background-color: transparent;
-    display: flex;
-    flex-direction: row;
-}
-
-.left{
-    width: 40%;
-    background-color: transparent;
-}
-
-.right{
-    width: 40%;
-    background-color: transparent;
-}
-
-
-.potd{
-    display: flex;
-    border: 3px solid black;
-    width: 30%;
-    height: 20px;
-    padding: 30px;
-    margin: 60px auto; 
-    border-radius: 20px;
-    align-items: center;
-    justify-content: center;
+    align-items: end;
     text-decoration: none;
+    margin-top: 4rem;
 }
 
-.welcome-user{
-    width: 90%;
-    height: calc(4vw + 1vh + 3vmin);
-    margin: 10px auto;
+/* ------- RESET PASSWORD ----------- */
+
+.reset-form{
+    min-height: 10em;
+    margin: 7em auto;
+    padding: 2em 0em;
+}
+
+.reset-form p{
+    font-size: 1.5rem;
+}
+
+/* -------- USER HOME --------- */
+.user-main{
+    width: 98%;
+    background-color: var(--color-500);
     display: flex;
-    flex-direction: row;
-    background-color: transparent;
+    margin: auto;
+    min-height: 100vh;
+}
+
+.mobile-nav-toggle{
+    display: none;
+}
+
+.user-details{
+    width: 30%;
+    margin: 2em;
 }
 
 .greet{
+    font-size: 3rem;
+    width: fit-content;
+    margin: auto;
+}
+
+.user-actions{
+    width: fit-content;
+}
+
+.user-actions button{
+    width: 27rem;
+    margin-top: 4rem;
+    padding: 0.6em 2em;
+    border: none;
+    border-radius: 0 20px 20px 0;
+    background-color: var(--color-400);
+    font-size: 1.6rem;
+    transition: transform 1000ms;
+}
+
+.user-actions button:hover,
+.user-actions button:focus-visible{
+    transform: translateX(3rem);
+    transition: transform 200ms;
+}
+
+.topics{
     width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    margin-left: 1%;
-    font-size: calc(2vw + 1vmin);
-    background-color: transparent;
-}
-
-.welcome-user form{
-    float: right;
-}
-
-.user-btns{
-    width: 50%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: transparent;
-}
-
-.user-btns form{
-    background-color: transparent;
-}
-
-.user-btns button{
-    font-size: calc(1vw + 0.7vmin);
-}
-
-.menu form{
-    margin: 5px;
+    margin: 2em auto;
+    border-left: 0.3rem solid black;
+    min-height: fit-content;
 }
 
 .topic-title{
-    width: 80%;
-    height: 7%;
-    margin-bottom: 7px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 10px auto;
-    display: flex;
-    flex-direction: row;
-    background-color: transparent;
+    width: fit-content;
+    margin: 1.5em auto;
+    font-size: 2rem;
 }
 
-.topic-title form{
-    background-color: transparent;
-}
-
-.topic-manage{
-    display: flex;
-    background-color: transparent;
-}
-
-.topic-manage button{
-    width: 20%;
-    font-size: calc(10vw + 1.4vh + 1vmin);
-}
-
-.topic-title h2{
-    font-size: calc(1vw + 1.4vh + 1vmin);
-    background-color: transparent;
-}
-
-.topiclist{
-    width: 60%;
-    height: fit-content;
-    background-color: transparent;
-    margin: 20px auto;
+.topic-list{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
-.topiclist form,h3{
+
+.topic-list-button{
+    border-color: var(--color-400);
+    border-radius: 20px;
+    font-size: 1.9rem;
+    padding: 0.3em 2em;
+    margin: 0.5em auto;
+    width: 100%;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+
+.topic-list-button:hover{
+    box-shadow: 0 0 40px 40px var(--color-400) inset;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.major-topic-dropdown {
+    width: 20%;
+    margin: 1em auto;
+    height: fit-content;
+    transition: 300ms;
+  }
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: var(--color-400);
+    color: white;
+    width: 90%;
+    margin: 1rem auto auto auto;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5em 2em;
+    font-size: 1.6rem;
+    transition: 300ms;
+  }
+  
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    width:90%;
+    background-color: transparent;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    transition: 300ms;
+  }
+
+  .dropdown-content form{
+    background-color: transparent;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content button{
+    color: white;
+    border: none;
+    cursor: pointer;
     background-color: transparent;
     width: 100%;
+    padding: 0.7rem 2rem;
+    text-decoration: none;
+    display: block;
+    font-size: 1.4rem;
+    transition: 300ms;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content button:hover {background-color: var(--color-400);}
+  
+  /* Show the dropdown menu on hover */
+  .major-topic-dropdown:hover .dropdown-content {display: block;}
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .major-topic-dropdown:hover .dropbtn {background-color: var(--color-900); color: white;}
+
+/* -------- ADD TOPIC -------- */
+
+.update-form{
+    width: 50%;
+    background-color: white;
+    border-radius: 5px;
+    margin: 7rem auto auto auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
 }
 
-.topiclist button{
-    height: calc(1vw + 1vw + 2vmin);
-    margin: 10px;
-    border: none;
-    border-radius: 30px;
-    color: #FEFFFF;
-    font-weight: 600;
-    font-size: 1.2em;
-    background-color: #3AAFA9;
-    overflow: hidden;
+.update-form form{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.update-form a{
+    color: blue;
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.update-form h2{
+    font-size: 2rem;
+    color: black;
+    margin: auto;
+    text-decoration: underline;
+}
+
+.update-form input{
     width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 0.4rem solid black;
+    margin: 2em auto;
+    color: black;
+    font-size: 1.7rem;
 }
 
-/* ---------------USER HOME PAGE END--------------- */
-.neonText {
-    text-shadow: 0 0 6px #3AAFA9, 0 0 13px #3AAFA9, 0 0 1px #3AAFA9, 0 0 27px #3AAFA9, 0 0 18px #3AAFA9, 0 0 7px #3AAFA9, 0 0 6px #0fa;
+.update-form input:hover{
+    border-bottom: 0.4rem solid var(--color-400);
+    border-radius: 10px;
+}
+
+.update-form button{
+    font-size: 1.8rem;
+    padding: 0.4em 2.8em;
+    margin: 2em auto auto auto;
+    background-color: var(--color-400);
+    color: white;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: none;
+    border-radius: 10px;
+    transition: 300ms;
+} 
+
+.update-form button:hover{
+    color: black;
+    background-color: white;
+    border: 4px solid var(--color-400);
+    padding: 0.2em 2.6em;
 }
 
 
-/* ----------------------------- RESPONSIVE ------------------------------- */
+/* ----------- REMOVE TOPIC ------------- */
 
-@media only screen and (max-width: 1240px) {
-    .mid{
-        display: flex;
+
+.remove-topic-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 50%;
+    margin: 0px auto auto auto;
+}
+
+.remove-topic-list form{
+    min-height: 10px;
+}
+
+.remove-question-set{
+    min-width: 20rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.remove-topic-list div{
+    min-width: 25rem;
+    overflow-x: scroll;
+    background-color: var(--color-400);
+    border-radius: 30px;
+    font-size: 1.6rem;
+    padding: 0.2em 2em;
+    max-height: 4rem;
+    overflow: scroll;
+    color: black;
+    font-weight: 600;
+}
+
+.remove-topic-list button{
+    font-size: 1.5rem;
+    padding: 0.3em 1em;
+    border: none;
+    border-radius: 50%;
+    margin-left: 1rem;
+    background-color: var(--color-900);
+    color: white;
+    font-weight: 900;
+    transition: 300ms;
+}
+
+.remove-topic-list button:hover{
+    background-color: rgb(215, 0, 0);
+}
+
+/* ---------- TOPIC WISE LIST -------- */
+
+.question-list-title{
+    width: 80%;
+    margin: 3rem auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.question-topic-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    background-color: var(--color-400);
+    max-height: 5rem;
+    padding: 1rem 3rem;
+}
+
+.question-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+}
+
+
+.question-button-1{
+    font-size: 1.6rem;
+    padding: 0.1em 1em;
+    border: none;
+    border: 0.2em solid var(--color-900);
+    border-radius: 10px;
+    color: black;
+    font-weight: 600;
+    min-width: 9em;
+    transition: 300ms;
+}
+
+.question-button-2{
+    margin-right: 0.4em;
+    font-size: 1.6rem;
+    padding: 0.1em 1em;
+    border: none;
+    border: 0.2em solid var(--color-900);
+    border-radius: 10px;
+    background-color: black;
+    font-weight: 600;
+    color: white;
+    min-width: 9em;
+    transition: 300ms;
+} 
+
+.question-button-1:hover{
+    background-color: black;
+    color: white;
+}
+
+.question-button-2:hover{
+    background-color: white;
+    color: black;
+}
+
+.question-topic-title h2{
+    color: black;
+    font-size: 2.3rem;
+    margin: 0.4em auto 0.4em 0.5em;
+}
+.question-list-title table{
+    border: 2px solid black;
+    margin: 3rem auto auto auto;
+    min-width: 700px;
+    overflow: scroll;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.question-list-title th, td{
+    border: 1px solid black;
+    align-items: center;
+}
+
+.question-list-title th{
+    font-size: 2.8rem;
+}
+
+.question-list-title td{
+    font-size: 2rem;
+    height: 3em;
+    transition: 300ms;
+}
+
+.link a{
+    transition: 300ms;
+}
+
+.link a:hover{
+    color: blue;
+}
+
+/* ----- REMOVE QUESTION ------ */
+
+
+/* ---------------- PROFILE STATISTICS ------------------ */
+
+.profile-grid{
+    width: 70%;
+    min-height: 40rem;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+}
+
+.first-grid, .second-grid, .third-grid, .fourth-grid{
+    background-color: transparent;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-900);
+    width: 100%;
+    padding: auto;
+    overflow: scroll;
+}
+
+.second-grid{
+    grid-column: span 2;
+}
+
+.third-grid{
+    grid-column: span 2;
+}
+
+.first-grid div{
+    background-color: #008970;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.first-grid h2{
+    background-color: #79d2d2;
+}
+
+.second-grid div{
+    background-color: #5a3770;
+}
+
+.second-grid h2{
+    background-color: #ce4e4e;
+}
+
+.third-grid div{
+    background-color: #7c341e;
+}
+
+.third-grid h2{
+    background-color: #9586c8;
+}
+
+.fourth-grid div{
+    background-color: green;   
+}
+
+.fourth-grid h2{
+    background-color:#cead83;
+}
+
+.stat-title{
+    color: black;
+    padding: 1rem auto;
+    margin: 0.3rem 0.3rem;
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+    font-size: 2.1rem;
+}
+
+.stat-title h2{
+    font-size: 0.1rem;
+}
+
+.stat-content{
+    color: rgb(228, 228, 228);
+    margin: 0.3rem 0.3rem;
+    border-radius: 0px 0px 5px 5px;
+    text-align: left;
+    padding: 1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.6rem;
+    height: 100%;
+}
+
+.stat-content p{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: rgb(228, 228, 228);
+}
+
+.disclaimer{
+    width: 70%;
+    margin: 6rem auto;
+}
+
+.disclaimer h2{
+    margin: 1em auto;
+    text-align: center;
+    font-size: 3.9rem;
+    color: black
+}
+
+.disclaimer-content{
+    font-size: 1.6rem;
+}
+
+/* -------------------------------------------------------*/
+
+
+/* ----------- RESPONSIVE CODE ------------- */
+
+
+
+/* ---------- VIEW - 1 ------------- */
+@media only screen and (max-width: 900px) {
+    html{
+        font-size: 50%;
+    }
+    .common-home-main{
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
     }
     .common-home-left{
-        width: 50%;
-        margin: 4%;
-        background-color: transparent;
-        border-radius: 0px;
-        z-index: 0;
+        margin:  5rem auto;
+    }
+
+    .common-home-right{
+        margin:  5rem auto;
+    }
+    .about-it{
+        text-align: center
+    }
+}
+
+/* ---------- VIEW - 2 ------------- */
+@media only screen and (max-width: 600px) {
+    html{
+        font-size: 40%;
+    }
+    .common-home-left{
+        background-color: var(--color-500);
     }
     .common-home-left-inner{
-        color: #2B7A78;
         border-radius: 0px;
-        border: 2px groove #47d5ce;
+        padding: 1rem 2rem;
+        min-height: 4rem;
     }
-    .about-it p{
-        text-align: center;
+    .logo-text{
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .logo-text h2{
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .common-home-right{
+        width: 80%;
+    }
+
+
+    /* ------ HAMBURGER ------- */
+
+    .user-main{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .h-class{
+        height: 0px;
+    }
+
+    .topics{
+        border: none;
+        margin: 0 auto;
+    }
+
+    .menu{
+        width: 95%;
+        margin: 1em auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-130%);
+        overflow-y: hidden;
+        transition: transform 350ms ease-in-out;
+        padding-bottom: 4rem;
+        border-bottom: 2px solid var(--color-400);
+    }
+
+    .menu button{
+        border-radius: 20px;
+        font-size: 2rem;
+    }
+
+    .menu[data-visible="true"]{
+        transform: translateY(0%);
+    }
+
+    .mobile-nav-toggle{
+        display: block;
+        position: absolute;
+        z-index: 9999;
+        background-color: rgb(211, 133, 0);
+        width:  3em;
+        aspect-ratio: 1;
+        border: none;
+        border-radius: 100%;
+        margin: 1rem;
+    }
+
+    .update-form{
+        width: 80%;
+    }
+    /* .update-form input{
+        font-size: 4rem;
+    }
+    .update-form button{
+        font-size: 3.5rem;
+    }
+    .update-form h2{
+        font-size: 4.5rem;
+    } */
+    .question-list-title{
+        padding: 0px;
+    }
+    .question-topic-title{
+        width: 90%;
+    }
+    .major-topic-dropdown {
+        margin: 1em auto;
         width: 50%;
-        margin: 4%;
     }
-  }
+    .profile-grid{
+        grid-template-columns: 1fr;
+        grid-template-rows: 1.5fr 2fr 2fr 1.5fr;
+        gap: 2rem;
+    }
+    .second-grid{
+        grid-column: auto;
+    }
+    
+    .third-grid{
+        grid-column: auto;
+    }
+}
 
-  @media only screen and (max-width: 800px) {
-    .mid{
-        display: flex;
+/* ---------- VIEW - 3 ------------- */
+@media only screen and (max-width: 490px) {
+    html{
+        font-size: 40%;
+    }
+    .update-form input, .common-home-right input{
+        font-size: 3rem;
+    }
+
+    .update-form h2, .common-home-right h2{
+        font-size: 3.5rem;
+    }
+
+    .update-form button{
+        font-size: 3.5rem;
+    }
+
+    .question-topic-title{
+        padding: 1em 3em;
+        max-height: 10em;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
-        font-size: 0.8rem;
     }
-    .common-home-left{
-        width: 80%;
+    .question-topic-title h2{
+        margin: auto;
     }
-    .common-home-right{
-        width: 80%;
+    .profile-grid{
+        grid-template-rows: repeat(4, 25%);
     }
-    .local input{
-        height: 40px;
-        font-size: 1.1em;
-    }
-    .rem-topic-mid{
-        width: 100%;
-    }
-    .rem-topiclist{
-        width: 80%;
-    }
-  }
+}
 
-  @media only screen and (max-width: 500px) {
-    .mid{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-    }
-    .common-home-left{
-        width: 90%;
-    }
-    .common-home-right{
-        width: 90%;
-    }
-    .header h1{
-        margin-right: 5px;
-    }
-    .local input{
-        width: 90%;
-        height: 40px;
-        font-size: 1.1em;
-    }
-  }
-
-  @media only screen and (max-width: 300px) {
-    .mid{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-    }
-    .common-home-left{
-        width: 90%;
-    }
-    .common-home-right{
-        width: 90%;
-    }
-    .header h1{
-        margin-right: 5px;
-    }
-    .local input{
-        width: 90%;
-        height: 40px;
-        font-size: 1.1em;
-    }
-  }
-
-/* ------------------------------------------------------------------------ */
+/* ---------- VIEW - 4 ------------- */
+@media only screen and (max-width: 380px) {
+    html{
+        font-size: 35%;
+    }    
+}

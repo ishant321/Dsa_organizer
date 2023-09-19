@@ -1,0 +1,47 @@
+<%- include("partials/header.ejs") %>
+
+<div class="main" style="display: flex; flex-direction: column;">
+    <h1 style="margin: 1rem auto; font-size: 4rem; letter-spacing: 0.4rem;">Hey <font style="color: #47d5ce;"><%=_.capitalize(username)%>..... </font>This is your profile Statistics</h1>
+    <div class="profile-grid">
+        <div class="first-grid">
+            <h2 class="stat-title">Profile status</h2>
+            <div class="stat-content" style="justify-content: center;">
+               <p> <%= profileStatus %> </p>
+            </div>
+        </div>
+        <div class="second-grid">
+            <h2 class="stat-title">Major missing topics</h2>
+            <div class="stat-content">
+                <p>
+                <% missingTopicsArray.forEach(function(item){ %><font style="color: red"><%= _.capitalize(item) %>,</font>
+                <% }) %>
+                <br>
+                 topics are missing.</p>
+            </div>
+        </div>
+        <div class="third-grid">
+            <h2 class="stat-title">Weak topics</h2>
+            <div class="stat-content">
+                <p>
+                <% lessThanTenArray.forEach(function(item){ %>
+                    <font style="color: red;"><%= _.capitalize(item) %>,</font>
+                <% }) %><br>
+                 topics have less questions.</p>
+            </div>
+        </div>
+        <div class="fourth-grid">
+            <h2 class="stat-title">Message</h2>
+            <div class="stat-content">
+                <p><%= customMessage %></p>
+            </div>
+        </div>
+    </div>
+    <div class="disclaimer">
+        <h2>disclaimer</h2>
+        <p class="disclaimer-content">
+            The above mentiond important topics are not only important topics. These are gereral topics, if you added these topics already with another name then you can completely ignore them.
+        </p>
+    </div>
+</div>
+
+<%- include("partials/footer.ejs") %>

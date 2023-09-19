@@ -1,21 +1,17 @@
 <%- include("../partials/header.ejs") %> 
 
 
-<div class="main" style="height: 100%">
-    <div class="mid" style="width: 96%; height:100%;">
-        <div class="common-home-right" style="margin: 50px auto;">
-            <form action="/login" method="post" style="background-color: transparent;">
-                <div class="local" style="margin: 50px auto;">
+<div class="main">
+        <div class="update-form">
+            <form action="/login" method="post">
                     <h2>Sign In</h2>
                     <input type="email" name="email" placeholder="Email*">
                     <input type="password" name="password" placeholder="Password*">
-                    <p class="flash" style="color: black;"><%= message %></p>
+                    <p class="flash" style="color: red; text-align: center; height: 5px;"><%= message %></p>
                     <button class="btn" type="submit">Log In</button>
-                </div>
+                    <a href="/resetpassword">forget password?</a>
             </form>
-            <a style="background-color: transparent; color: blue; margin: 10px auto;" href="/resetpassword">forget password?</a>
         </div>
-    </div>
 </div>
 
 

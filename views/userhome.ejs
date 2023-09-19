@@ -1,45 +1,53 @@
 <%- include("partials/header.ejs") %>
 
 
-<div class="main">
-    <div class="welcome-user">
-        <div class="greet">Welcome <%= _.capitalize(nameOfUser) %></div>
-        <div class="user-btns">
+<div class="user-main">
+    <button class="mobile-nav-toggle"  aria-controls="menu" aria-expanded="false"><%= _.capitalize(nameOfUser) %></button>
+    <div data-visible="false" class="menu user-details h-class">
+        <div class="greet">Hello <%= _.capitalize(nameOfUser) %></div>
+        <div class="user-actions">
+            <form action="/profilestats" method="get">
+                <button style="background-color: rgb(0, 101, 134);" class="btn">Profile stats</button>
+            </form>
+            <form action="/addtopic" method="get">
+                <button style="background-color: rgb(0, 101, 134);" class="btn">Add topic</button>
+            </form>
+            <form action="/removetopic" method="get">
+                <button style="background-color: rgb(0, 101, 134);" class="btn">Remove topic</button>
+            </form>
             <form action="/changepassword" method="post">
-                <button class="btn">change password</button>
+                <button style=" background-color: rgb(79, 27, 0);" class="btn">change password</button>
             </form>
             <form action="/logout" method="post">
-                <button class="btn">Log Out</button>
+                <button style=" background-color: rgb(79, 27, 0);">Log Out</button>
             </form>
         </div>
     </div>
-    <div class="topic-title">
-        <h2>Topic names</h2>
-    </div>
-    <div class="userhome-mid">
-        <div class="flash" style="left: 40%;">
-            <%= message %>
+    <div class="major-topic-dropdown">
+        <button class="dropbtn">Topics</button>
+        <div class="dropdown-content">
+          <% suggestedTopic.forEach(function(item){ %>
+            <form action="/addtopicbysuggestion" method="post">
+                <button name="topicvalue" value="<%= item %>"><%= _.capitalize(item) %></button>
+            </form>
+        <% }) %>
         </div>
-        <div class="left"></div>
-        <div class="topiclist">
-            <div class="topic-manage">
-                <form action="/addtopic" method="get">
-                    <button class="btn">Add</button>
-                </form>
-                <form action="/removetopic" method="get">
-                    <button class="btn">Remove</button>
-                </form>
-            </div>
+    </div>
+    <div style="margin: 0.2em 0em; font-size: 1.5rem;">
+        <%= message %>
+    </div>
+    <div class="topics">
+        <div class="topic-title">
+            <h2>Your Topic names</h2>
+        </div>
+        <div class="topic-list">
             <% topics.forEach(function(item){ %>
                     <form action="/topicwiselist/<%= (item.topicname) %>" method="get">
-                        <button class"><%= _.capitalize(item.topicname) %> (<%= item.content.length%>)</button>
+                        <button class="topic-list-button"><%= _.capitalize(item.topicname) %> (<%= item.content.length%>)</button>
                     </form>
             <% }); %>
         </div>
-        <div class="right">
-        </div>
     </div>
-    <div class="resources"></div>
 </div>
 
 

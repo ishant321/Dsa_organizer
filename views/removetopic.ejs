@@ -1,21 +1,21 @@
 <%- include("partials/header.ejs") %> 
 
-<div class="main">
+<div class="main" style="display: flex; flex-direction: column;">
     <div class="topic-title">
         <h2>TOPIC NAMES</h2>
     </div>
-    <div class="rem-topic-mid">
         <% t.forEach(function(item){ %>
 
-            <div class="rem-topiclist">
-                <div style="background-color: #3AAFA9;"><%= _.capitalize(item.topicname) %></div>
-                <form action="/remove" method="post" class="rem-top">
-                    <button class="btn" style="width: 50px;" name="rembtn" value="<%= item.topicname %>"">-</button>
+            <div class="remove-topic-list" style="margin: 2rem auto;">
+                <form action="/remove" method="post">
+                    <div class="remove-question-set">
+                        <div><%= _.capitalize(item.topicname) %></div>
+                        <button name="rembtn" value="<%= item.topicname %>"">-</button>
+                    </div>
                 </form>
             </div>
 
         <% }); %>
-    </div>
 </div>
 
 

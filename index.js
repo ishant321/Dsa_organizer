@@ -5,6 +5,21 @@
 
 //---------------------------
 
+const importantTopics =[
+    "array",
+    "linked list",
+    "stack",
+    "queue",
+    "tree",
+    "graph",
+    "recursion",
+    "dynamic programming",
+    "string",
+    "bit manipulation",
+    "sliding window",
+    "greedy",
+    "heap"
+];
 
 //-------------------- ALL IMPORTS ------------------------
 var express = require("express");
@@ -12,7 +27,6 @@ var bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var _ = require("lodash");
 const passport = require("passport");
-const passport2 = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const findorcreate = require("mongoose-findorcreate");
 const session = require("express-session");
@@ -20,6 +34,8 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const flash = require("connect-flash");
 var path = require("path");
+const e = require("connect-flash");
+const { read } = require("fs");
 require("dotenv").config();
 //---------------------------------------------------------
 
@@ -51,6 +67,7 @@ app.use(passport.session());
 
 
 //------------- DATABASE CONNECTIONS ------------------------
+// mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
 mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
 
 const topicSchema = new mongoose.Schema({
@@ -161,7 +178,8 @@ app.get("/auth/local", (req, res) => {
 
 app.get("/register", (req, res) => {
     res.render("commonhome", {
-        text: ""
+        text: "", 
+        message: req.flash("info")
     });
 })
 
@@ -169,11 +187,13 @@ app.post("/register",  (req, res)=>{
     const name = _.lowerCase(req.body.name);
     userModel.register({ email: req.body.email, name: name}, req.body.password, async (err, user)=>{
       if(err){
-        console.log(err);
+        if(err){
+            req.flash("info", "User already exist.")
+        }
         res.redirect("/register");
       } 
       else{
-        passport.authenticate("local", {failureRedirect: "/"})(req, res, () => {
+        passport.authenticate("local")(req, res, () => {
             res.redirect("/userhome");
         })
       }
@@ -314,10 +334,26 @@ app.get("/", async (req, res)=>{
 app.get("/userhome", async (req, res)=>{
     if(req.isAuthenticated()){
         const curUser = await userModel.findById(req.user.id).exec();
+        let missingTopicsArray = [];
+        var flag;
+        const userTopicList = curUser.data;
+        for(var i = 0; i < importantTopics.length; i++){
+            flag = true;
+            for(var j = 0; j < userTopicList.length; j++){
+                if(importantTopics[i] === _.lowerCase(userTopicList[j].topicname)){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag == true){
+                missingTopicsArray.push(importantTopics[i]);
+            }
+        }
         res.render("userhome", {
             nameOfUser: curUser.name,
             topics: curUser.data,
-            message: req.flash("info")
+            message: req.flash("info"),
+            suggestedTopic: missingTopicsArray
         })
     }else{
         res.redirect("/login");
@@ -339,17 +375,44 @@ app.get("/addtopic",(req, res)=>{
     }
 });
 
-
-app.post("/addnewtopic", async (req, res) => {
+app.post("/addtopicbysuggestion", async (req, res) => {
     if(req.isAuthenticated()){
-
-        const topicName = req.body.topicname;
+        const topicName = _.lowerCase(req.body.topicvalue);
         const newTopic = new topicModel({ topicname: topicName });
         newTopic.save();
         const curUser = await userModel.findById(req.user.id).exec();
         curUser.data.push({topicname: topicName});
         curUser.save();
         res.redirect("/userhome");
+    }
+    else{
+        res.redirect()
+    }
+})
+
+
+app.post("/addnewtopic", async (req, res) => {
+    if(req.isAuthenticated()){
+        const topicName = _.lowerCase(req.body.topicname);
+        const newTopic = new topicModel({ topicname: topicName });
+        newTopic.save();
+        const curUser = await userModel.findById(req.user.id).exec();
+        var flag = true;
+        for(var i = 0; i < curUser.data.length; i++){
+            if(_.lowerCase(topicName) === curUser.data[i].topicname){
+                flag = false;
+                break;
+            }
+        }
+        if(flag == true){
+            curUser.data.push({topicname: topicName});
+            curUser.save();
+            res.redirect("/userhome");
+        }
+        else{
+            req.flash("info", "Topic already exist");
+            res.redirect("/userhome");
+        }
 
     }else{
         res.redirect("/login");
@@ -445,7 +508,11 @@ app.post("/newquestion", async (req, res) => {
     if(req.isAuthenticated()){
         const topicName = req.body.nqb;
         const questionName = req.body.questionName;
-        const questionLink = req.body.questionLink;
+        var questionLink = req.body.questionLink;
+        var checkStirng = questionLink.substring(0, 4);
+        if(checkStirng != "http"){
+            questionLink = "http://"+questionLink;
+        }
 
         const curUser = await userModel.findById(req.user.id).exec();
         const topicArray = curUser.data;
@@ -502,6 +569,70 @@ app.post("/deletequestion", async (req, res) => {
         questionArray.splice(j, 1);
         curUser.save();
         res.redirect("/topicwiselist/"+topicname);
+    }
+    else{
+        res.redirect("/login");
+    }
+});
+
+//-------- PROFILE -------
+
+app.get("/profilestats", async (req, res) => {
+    if(req.isAuthenticated()){
+        const curUser = await userModel.findById(req.user.id).exec();
+        var nul = 0, lessThanTen = 0, tenToTwenty = 0, aboveTwenty = 0;
+        const missingTopicsArray = [];
+        const lessThanTenArray = [];
+        var flag = true;
+        for(var i = 0; i < importantTopics.length; i++){
+            flag = true;
+            curUser.data.forEach(function(item){
+                if(_.lowerCase(item.topicname) === importantTopics[i] || item.topicname === importantTopics[i]+'s'){
+                    if(item.content.length <= 10){
+                        lessThanTen += 1;
+                        lessThanTenArray.push(item.topicname);
+                    }
+                    else if(item.content.length > 10 && item.content.length <=20){
+                        tenToTwenty += 1;
+                    }
+                    else{
+                        aboveTwenty += 1;
+                    }
+                    flag = false;
+                }
+            });
+            if(flag === true){
+                nul = nul+1;
+                missingTopicsArray.push(importantTopics[i]);
+            }
+        }
+
+        var profileStatus;
+        var customMessage = "All the best";
+
+        if(nul === importantTopics.length){
+            profileStatus = "Empty";
+        }
+        else if(nul >= 5){
+            profileStatus = "Very Weak";
+        }
+        else if(lessThanTen >= 5){
+            profileStatus = "Weak";
+        }
+        else if(tenToTwenty >= 5){
+            profileStatus = "Good";
+        }
+        else if(aboveTwenty >= 8){
+            profileStatus = "Very good";
+        }
+
+        res.render("profile",{
+            profileStatus: profileStatus,
+            missingTopicsArray: missingTopicsArray,
+            lessThanTenArray: lessThanTenArray,
+            customMessage: customMessage,
+            username: curUser.name
+        });
     }
     else{
         res.redirect("/login");
