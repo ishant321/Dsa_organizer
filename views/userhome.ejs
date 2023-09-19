@@ -2,9 +2,9 @@
 
 
 <div class="user-main">
-    <button class="mobile-nav-toggle"  aria-controls="menu" aria-expanded="false"><%= _.capitalize(nameOfUser) %></button>
+    <button class="mobile-nav-toggle"  aria-controls="menu" aria-expanded="false"><%= _.capitalize(nameOfUser.substring(0, 1)) %></button>
     <div data-visible="false" class="menu user-details h-class">
-        <div class="greet">Hello <%= _.capitalize(nameOfUser) %></div>
+        <div class="greet">Hello <%= _.capitalize(nameOfUser.split(/\s/)[0]) %></div>
         <div class="user-actions">
             <form action="/profilestats" method="get">
                 <button style="background-color: rgb(0, 101, 134);" class="btn">Profile stats</button>
