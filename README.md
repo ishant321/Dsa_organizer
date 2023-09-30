@@ -6,7 +6,7 @@ A project to organize your DSA practice journey
 
 
 
-## Website link
+## Deployment link
 
 https://dsa-organizer-6wz8.vercel.app/
 
