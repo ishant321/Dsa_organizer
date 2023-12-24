@@ -216,8 +216,8 @@ app.post("/login", async (req, res) => {
     }
     else{
         passport.authenticate("local", {failureFlash: req.flash("info", "Invalid username or password"), failureRedirect: "/login"})(req, res, ()=>{
-                            res.redirect("/userhome");
-                        });
+            res.redirect("/userhome");
+        });
     }
     // req.login(user, async function(err) {
     //     if (err) { 
