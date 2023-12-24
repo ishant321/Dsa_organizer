@@ -209,23 +209,33 @@ app.post("/login", async (req, res) => {
         email: req.body.email,
         password: req.body.password
     })
-    req.login(user, async function(err) {
-        if (err) { 
-            console.log(err);
-            res.redirect("/login");
-        }else{
-            const curUser = await userModel.findOne({email: user.email});
-            if(!curUser){
-                req.flash("info", "Email not registered");
-                res.render("auth/login", {message: req.flash("info")});
-            }
-            else{
-                passport.authenticate("local", {failureFlash: req.flash("info", "Invalid username or password"), failureRedirect: "/login"})(req, res, ()=>{
-                    res.redirect("/userhome");
-                });
-            }
-        }
-    });
+    const checkUser = await userModel.find({email: user.email}).exec();
+    if(checkUser.length == 0){
+        req.flash("info", "Email not registered");
+        res.render("auth/login", {message: req.flash("info")});
+    }
+    else{
+        passport.authenticate("local", {failureFlash: req.flash("info", "Invalid username or password"), failureRedirect: "/login"})(req, res, ()=>{
+                            res.redirect("/userhome");
+                        });
+    }
+    // req.login(user, async function(err) {
+    //     if (err) { 
+    //         console.log(err);
+    //         res.redirect("/login");
+    //     }else{
+    //         const curUser = await userModel.findOne({email: user.email});
+    //         if(!curUser){
+    //             req.flash("info", "Email not registered");
+    //             res.render("auth/login", {message: req.flash("info")});
+    //         }
+    //         else{
+    //             passport.authenticate("local", {failureFlash: req.flash("info", "Invalid username or password"), failureRedirect: "/login"})(req, res, ()=>{
+    //                 res.redirect("/userhome");
+    //             });
+    //         }
+    //     }
+    // });
 });
 
 app.get("/resetpassword", (req, res) => {
