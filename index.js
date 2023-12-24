@@ -393,7 +393,7 @@ app.post("/addtopicbysuggestion", async (req, res) => {
         newTopic.save();
         const curUser = await userModel.findById(req.user.id).exec();
         curUser.data.push({topicname: topicName});
-        curUser.save();
+        await curUser.save();
         res.redirect("/userhome");
     }
     else{
