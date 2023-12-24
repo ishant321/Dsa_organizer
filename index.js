@@ -387,6 +387,7 @@ app.get("/addtopic",(req, res)=>{
 
 app.post("/addtopicbysuggestion", async (req, res) => {
     if(req.isAuthenticated()){
+        console.log(req.body);
         const topicName = _.lowerCase(req.body.topicvalue);
         const newTopic = new topicModel({ topicname: topicName });
         newTopic.save();
