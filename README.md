@@ -3,10 +3,13 @@
 
 A project to organize your DSA practice journey
 
+## Demo
+
+https://github.com/ishant321/Dsa_organizer/assets/82669824/fa61e03d-a3e7-4807-8653-e1d9f83a57fa
 
 
 
-## Website link
+## Deployment link
 
 https://dsa-organizer-6wz8.vercel.app/
 
