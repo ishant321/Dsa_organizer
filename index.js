@@ -57,7 +57,7 @@ app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     store: new MongoStore({
-        mongoUrl: 'mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB',
+        mongoUrl: 'mongodb+srv://'+process.env.MONGO_USERNAME+':'+process.env.MONGO_PASSWORD+'@cluster0.qho5cx4.mongodb.net/dsauserDB',
         ttl: 14 * 24 * 60 * 60 // = 14 days. Default
     }),
     resave: false,
