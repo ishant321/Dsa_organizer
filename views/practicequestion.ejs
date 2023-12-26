@@ -1,0 +1,33 @@
+<%- include("partials/header.ejs") %>
+
+<div class="main" style="display: flex; flex-direction: column;">
+   <% if(allQuestions.length < 4) { console.log(allQuestions);%>
+    <h1 style="display: flex; align-items: center; margin: auto; flex-direction: column;">You don't have enough questions</h1>
+    <%}else{%>
+        <div class="question-list-title">
+        <table>
+            <tr>
+                <th style="width: 20%;">sl no</th>
+                <th>q name</th>
+                <th style="width: 20%">link</th>
+            </tr>
+            <%
+            // Shuffle array
+            const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+            var i = 1;
+            // Get sub-array of first n elements after shuffled
+            let selected = shuffled.slice(0, 4);
+            %>
+            <% selected.forEach(function(item){ %>
+                <tr>
+                    <td style="width: 20%"><%= i %><% i++ %></td>
+                    <td><%= item.qname %></td>
+                    <td class="link" style="width: 20%;"><a href="<%= item.link %>" onClick="window.location.href='<%= item.link %>';" target="_blank" >url</a></td>
+                </tr>
+            <%})%>
+        </table>
+        </div>
+    <%}%>
+</div>
+
+<%- include("partials/footer.ejs") %>

@@ -592,6 +592,27 @@ app.post("/deletequestion", async (req, res) => {
     }
 });
 
+app.post("/practice", async (req, res) => {
+    if(req.isAuthenticated()){
+        var allQuestions = [];
+        var curUser = await userModel.findById(req.user.id).populate({path: 'data', populate: {path: 'content', model: 'topicModel'}});
+        // console.log(curUser.data.)
+
+        for(var i = 0; i < curUser.data.length; i++){
+            for(var j = 0; j < curUser.data[i].content.length; j++){
+                var q = curUser.data[i].content[j];
+                allQuestions.push(q);
+            }
+        }
+            res.render("practicequestion", {
+                allQuestions: allQuestions,
+            });
+    }
+    else{
+        res.redirect("/login");
+    }
+})
+
 //-------- PROFILE -------
 
 app.get("/profilestats", async (req, res) => {
