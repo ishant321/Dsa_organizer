@@ -53,11 +53,23 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(flash());
 
+// app.use(session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false
+// }))
+
 app.use(session({
+    cookie:{
+        secure: true,
+        maxAge:60000
+           },
+    store: new RedisStore(),
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}))
+    saveUninitialized: false,
+    resave: false
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 //-----------------------------------------------------------
