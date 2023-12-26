@@ -343,7 +343,7 @@ app.get("/", async (req, res)=>{
 
 app.get("/userhome", async (req, res)=>{
     if(req.isAuthenticated()){
-        const curUser = await userModel.findById(req.user.id).exec();
+        const curUser = await userModel.findById(req.user.id);
         let missingTopicsArray = [];
         var flag;
         const userTopicList = curUser.data;
@@ -387,7 +387,6 @@ app.get("/addtopic",(req, res)=>{
 
 app.post("/addtopicbysuggestion", async (req, res) => {
     if(req.isAuthenticated()){
-        console.log(req.body);
         const topicName = _.lowerCase(req.body.topicvalue);
         const newTopic = new topicModel({ topicname: topicName });
         newTopic.save();
