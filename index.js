@@ -59,15 +59,25 @@ app.use(flash());
 //     saveUninitialized: false
 // }))
 
-app.use(session({
-    cookie:{
-        secure: true,
-        maxAge:60000
-           },
-    store: new RedisStore(),
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: false
+// app.use(session({
+//     cookie:{
+//         secure: true,
+//         maxAge:60000
+//            },
+//     store: new RedisStore(),
+//     secret: process.env.SESSION_SECRET,
+//     saveUninitialized: false,
+//     resave: false
+// }));
+
+app.use(cookieSession({
+    name: 'session',
+    keys: ['secret'],
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
 }));
 
 app.use(passport.initialize());
