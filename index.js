@@ -29,7 +29,8 @@ var _ = require("lodash");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const findorcreate = require("mongoose-findorcreate");
-const session = require("cookie-session");
+const session = require("express-session");
+const MongoStore = require('connect-mongo')(session);
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const flash = require("connect-flash");
@@ -53,32 +54,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(flash());
 
-// app.use(session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false
-// }))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore(options),
+    resave: false,
+    saveUninitialized: false
+}))
 
-// app.use(session({
-//     cookie:{
-//         secure: true,
-//         maxAge:60000
-//            },
-//     store: new RedisStore(),
-//     secret: process.env.SESSION_SECRET,
-//     saveUninitialized: false,
-//     resave: false
-// }));
-
-app.use(cookieSession({
-    name: 'session',
-    keys: ['secret'],
-    cookie: {
-      httpOnly: true,
-      secure: true,
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
-    }
-}));
 
 app.use(passport.initialize());
 app.use(passport.session());
