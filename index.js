@@ -68,7 +68,7 @@ app.use(passport.session());
 
 //------------- DATABASE CONNECTIONS ------------------------
 // mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
-await mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
+mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
 
 const topicSchema = new mongoose.Schema({
     topicname: String,
