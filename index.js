@@ -79,7 +79,7 @@ mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MON
 
 const topicSchema = new mongoose.Schema({
     topicname: String,
-    content: [{ qname: String, link: String } ]
+    content: [{ qname: String, link: String, docs: String } ]
 });
 const topicModel = mongoose.model("topicModel", topicSchema);
 
@@ -526,6 +526,7 @@ app.post("/newquestion", async (req, res) => {
         const topicName = req.body.nqb;
         const questionName = req.body.questionName;
         var questionLink = req.body.questionLink;
+        var docLink = req.body.docLink;
         var checkStirng = questionLink.substring(0, 4);
         if(checkStirng != "http"){
             questionLink = "http://"+questionLink;
@@ -538,7 +539,7 @@ app.post("/newquestion", async (req, res) => {
                 break;
             }
         }
-        topicArray[i].content.push({qname: questionName, link: questionLink});
+        topicArray[i].content.push({qname: questionName, link: questionLink, docs: docLink});
         curUser.save();
         res.redirect("/topicwiselist/"+topicName);
     }
@@ -682,6 +683,6 @@ app.get("/profilestats", async (req, res) => {
 
 
 
-app.listen(3000, ()=>{
+app.listen(3001, ()=>{
     console.log("listening.......");
 });

@@ -20,11 +20,13 @@
                     <th style="width: 20%;">sl no</th>
                     <th>q name</th>
                     <th style="width: 20%">link</th>
+                    <th style="width: 20%">Notes</th>
                 </tr>
                 <% topicData.content.forEach(function(item){ %>
                     <tr>
                         <td style="width: 20%"><%= i %><% i++ %></td>
                         <td><%= item.qname %></td>
+                        <td class="link" style="width: 20%;"><a href="<%= item.link %>" onClick="window.location.href='<%= item.link %>';">url</a></td>
                         <td class="link" style="width: 20%;"><a href="<%= item.link %>" onClick="window.location.href='<%= item.link %>';">url</a></td>
                     </tr>
                 <%})%>
