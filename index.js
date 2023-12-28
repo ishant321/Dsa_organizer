@@ -706,6 +706,7 @@ app.get("/verify-email", async (req, res)=> {
         .then(async response => {
             if(response.data.data.status !== "valid"){
                 const user = await userModel.findByIdAndDelete(req.user.id);
+                await user.save();
                 req.flash("msg", "Invalid email");
                 return res.redirect("/register");
             }
