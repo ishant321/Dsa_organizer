@@ -91,10 +91,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     googleid: String,
     githubid: String,
-    is_verified: {
-        type: Boolean,
-        default: false
-    },
+    is_verified: Boolean,
     data: [topicSchema]
 });
 
@@ -198,7 +195,7 @@ app.get("/register", (req, res) => {
 
 app.post("/register",  (req, res)=>{
     const name = _.lowerCase(req.body.name);
-    userModel.register({ email: req.body.email, name: name}, req.body.password, async (err, user)=>{
+    userModel.register({ email: req.body.email, name: name, is_verified: 0}, req.body.password, async (err, user)=>{
       if(err){
         if(err){
             req.flash("info", "User already exist.")
@@ -365,7 +362,7 @@ app.get("/userhome", async (req, res)=>{
                     console.log(err);
                  }
                  req.flash("info","Email sent for verification. Please verify to login.");
-                 res.redirect("/");
+                 return res.redirect("/");
             });
         }
         const curUser = await userModel.findById(req.user.id);
@@ -702,52 +699,97 @@ app.get("/profilestats", async (req, res) => {
 app.get("/verify-email", async (req, res)=> {
     try{
         //To verify if the mail is valid or not
-        await axios.get('https://api.hunter.io/v2/email-verifier?email='+req.user.email+'&api_key='+process.env.EMAIL_VERIFICATION_API+'')
-        .then(async response => {
-            if(response.data.data.status !== "valid"){
-                const user = await userModel.findByIdAndDelete(req.user.id);
-                await user.save();
-                req.flash("msg", "Invalid email");
-                return res.redirect("/register");
+        let isValidMail = false;
+        const curUser = await userModel.findById(req.user.id);
+
+        await axios.get('https://emailvalidation.abstractapi.com/v1/?api_key='+process.env.EMAIL_VERIFICATION_API+'&email='+curUser.email+'')
+        .then(async result => {
+            // console.log(result.data);
+            if(!result.data.is_smtp_valid){
+                req.logout(async function(err) {
+                    if (err) {  
+                        console.log(err);
+                    }
+                });
+                await userModel.findByIdAndDelete(curUser.id).exec(); 
+            }
+            else if(result.data.is_smtp_valid){
+                isValidMail = true;
             }
         })
-        .catch(error => {
+        .catch(async error => {
             console.log(error);
+            await userModel.findByIdAndDelete(curUser.id);
+            req.flash("info", "Unusual error. Please try again.")
+            return res.redirect("/");
         });
+
+        if(isValidMail){
             const transporter = nodeMailer.createTransport({
                 host: "smtp.gmail.com",
                 port: 587,
                 secure: false,
                 requireTLS: true,
                 auth: {
-                    user: "themessrelay@gmail.com",
+                    user: "ishant.2022ca038@mnnit.ac.in",
                     pass: process.env.SMTP_MAIL_PASSWORD
                 }
             })
 
-        const mailOptions = {
-            from: "ishantnayakk@gmail.com",
-            to: req.user.email,
-            subject: "For email verification: <b>DSA Organizer</b>",
-            html: '<p>Hii '+req.user.name+', please click here to <a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+req.user.id+'">verify</a> your mail.</p>'
-        }
+            const mailOptions = {
+                from: "ishant.2022ca038@mnnit.ac.in",
+                to: curUser.email,
+                subject: "For email verification: DSA Organizer",
+                html: '<div class="card"><div class="card-body text-center"><h5 class="card-title">Welcome&nbsp+curUser.name+</h5><p class="card-text">We'+'+re excited to have you get started. First, you need to verify your account. Just press the button below.</p><a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+curUser.id+'" class="btn btn-primary" data-mdb-ripple-init>Verify</a></div></div>'
+            }
+            // '<p>Hii '+curUser.name+', please click here to <a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+curUser.id+'">verify</a> your mail.</p>'
 
-        transporter.sendMail(mailOptions, function(error, info){
-            if(error){
-                console.log(error);
-                req.flash("msg", error);
-                return res.redirect("/register");
+            const MailSender = async (transporter, mailOptions) => {
+                try{
+                    await transporter.sendMail(mailOptions);
+                    req.logout(function(err) {
+                        if (err) { 
+                            console.log(err);
+                    }});
+                    return res.redirect("/mailsent");
+                }
+                catch(error){
+                    console.log(error);
+                    req.flash("info", "error");
+                    return res.redirect("/register");
+                }
             }
-            else{
-                req.logout(function(err) {
-                    if (err) { 
-                        console.log(err);
-                    }
-                    req.flash("msg","Email sent for verification");
-                    res.redirect("/");
-                });
-            }
-        })
+            MailSender(transporter, mailOptions);
+            // await transporter.sendMail(mailOptions, function(error, info){
+            //     if(error){
+            //         console.log(error);
+            //         req.flash("info", "error");
+            //         return res.redirect("/register");
+            //     }
+            //     else{
+            //         req.logout(function(err) {
+            //             if (err) { 
+            //                 console.log(err);
+            //             }
+            //             console.log(curUser.email);
+            //             req.flash("info","Email sent for verification");
+            //             return res.redirect("/");
+            //         });
+            //     }
+            // })
+            
+        }
+        else{
+            console.log(" else in send mail") 
+            req.logout(function(err) {
+                if (err) { 
+                    console.log(err);
+                }
+            });
+            await userModel.findByIdAndDelete(curUser.id);
+            req.flash("info", "Invalid email");
+            return res.redirect("/"); 
+        }
     }
     catch(error){
         console.log(error);
@@ -755,11 +797,17 @@ app.get("/verify-email", async (req, res)=> {
 })
 
 app.get("/email-verify/:userId", async (req, res) => {
-    const user = await userModel.findByIdAndUpdate(req.params.userId, { $set: { is_verified: true }});
-    res.redirect("/login");
+    const curUser = await userModel.findByIdAndUpdate(req.params.userId, { $set: { is_verified: true }});
+    res.redirect("/mailverified");
 })
 
+app.get("/mailsent", (req, res) => {
+    res.render("mailsent");
+})
 
+app.get("/mailverified", (req, res) => {
+    res.render("mailverified");
+})
 
 //---------- ! EMAIL VERIFICATION FEATURE -------------
 
