@@ -707,7 +707,7 @@ app.get("/verify-email", async (req, res)=> {
             if(response.data.data.status !== "valid"){
                 const user = await userModel.findByIdAndDelete(req.user.id);
                 req.flash("msg", "Invalid email");
-                return res.redirect("/signup");
+                return res.redirect("/register");
             }
         })
         .catch(error => {
@@ -728,14 +728,14 @@ app.get("/verify-email", async (req, res)=> {
             from: "ishantnayakk@gmail.com",
             to: req.user.email,
             subject: "For email verification: <b>DSA Organizer</b>",
-            html: '<p>Hii '+req.user.name+', please click here to <a href="https://dsa-organizer-6wz8.vercel.app//email-verify/'+req.user.id+'">verify</a> your mail.</p>'
+            html: '<p>Hii '+req.user.name+', please click here to <a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+req.user.id+'">verify</a> your mail.</p>'
         }
 
         transporter.sendMail(mailOptions, function(error, info){
             if(error){
                 console.log(error);
                 req.flash("msg", error);
-                return res.redirect("/signup");
+                return res.redirect("/register");
             }
             else{
                 req.logout(function(err) {
@@ -743,7 +743,7 @@ app.get("/verify-email", async (req, res)=> {
                         console.log(err);
                     }
                     req.flash("msg","Email sent for verification");
-                    res.redirect("/signup");
+                    res.redirect("/");
                 });
             }
         })
