@@ -37,6 +37,8 @@ const flash = require("connect-flash");
 var path = require("path");
 const e = require("connect-flash");
 const { read } = require("fs");
+const nodeMailer = require("nodemailer");
+const axios = require("axios");
 require("dotenv").config();
 //---------------------------------------------------------
 
@@ -89,6 +91,10 @@ const userSchema = new mongoose.Schema({
     password: String,
     googleid: String,
     githubid: String,
+    is_verified: {
+        type: Boolean,
+        default: false
+    },
     data: [topicSchema]
 });
 
@@ -201,6 +207,9 @@ app.post("/register",  (req, res)=>{
       } 
       else{
         passport.authenticate("local")(req, res, () => {
+            if(!user.is_verified){
+                return res.redirect("/verify-email");
+            }
             res.redirect("/userhome");
         })
       }
@@ -350,6 +359,15 @@ app.get("/", async (req, res)=>{
 
 app.get("/userhome", async (req, res)=>{
     if(req.isAuthenticated()){
+        if(!req.user.is_verified){
+            req.logout(function(err) {
+                if (err) { 
+                    console.log(err);
+                 }
+                 req.flash("info","Email sent for verification. Please verify to login.");
+                 res.redirect("/");
+            });
+        }
         const curUser = await userModel.findById(req.user.id);
         let missingTopicsArray = [];
         var flag;
@@ -677,6 +695,72 @@ app.get("/profilestats", async (req, res) => {
         res.redirect("/login");
     }
 })
+
+
+//----------- EMAIL VERIFICATION FEATURE --------------
+
+app.get("/verify-email", async (req, res)=> {
+    try{
+        //To verify if the mail is valid or not
+        await axios.get('https://api.hunter.io/v2/email-verifier?email='+req.user.email+'&api_key='+process.env.EMAIL_VERIFICATION_API+'')
+        .then(async response => {
+            if(response.data.data.status !== "valid"){
+                const user = await userModel.findByIdAndDelete(req.user.id);
+                req.flash("msg", "Invalid email");
+                return res.redirect("/signup");
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+            const transporter = nodeMailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                requireTLS: true,
+                auth: {
+                    user: "themessrelay@gmail.com",
+                    pass: process.env.SMTP_MAIL_PASSWORD
+                }
+            })
+
+        const mailOptions = {
+            from: "ishantnayakk@gmail.com",
+            to: req.user.email,
+            subject: "For email verification: <b>DSA Organizer</b>",
+            html: '<p>Hii '+req.user.name+', please click here to <a href="https://dsa-organizer-6wz8.vercel.app//email-verify/'+req.user.id+'">verify</a> your mail.</p>'
+        }
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                console.log(error);
+                req.flash("msg", error);
+                return res.redirect("/signup");
+            }
+            else{
+                req.logout(function(err) {
+                    if (err) { 
+                        console.log(err);
+                    }
+                    req.flash("msg","Email sent for verification");
+                    res.redirect("/signup");
+                });
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+app.get("/email-verify/:userId", async (req, res) => {
+    const user = await userModel.findByIdAndUpdate(req.params.userId, { $set: { is_verified: true }});
+    res.redirect("/login");
+})
+
+
+
+//---------- ! EMAIL VERIFICATION FEATURE -------------
 
 
 //-------------------------------------------------
