@@ -921,7 +921,6 @@ app.get("/otpsent", (req, res) => {
     if(req.isAuthenticated()){
         var user = req.flash("user");
         res.render("otpsent", {
-            newpassword: "",
             userEmail: user[0],
             otp: user[1]
         });
