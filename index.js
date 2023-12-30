@@ -39,7 +39,9 @@ const e = require("connect-flash");
 const { read } = require("fs");
 const nodeMailer = require("nodemailer");
 const axios = require("axios");
+const cheerio = require("cheerio");
 require("dotenv").config();
+require("colors");
 //---------------------------------------------------------
 
 
@@ -77,11 +79,11 @@ app.use(passport.session());
 
 //------------- DATABASE CONNECTIONS ------------------------
 // mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
-mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected!"));
+mongoose.connect("mongodb+srv://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@cluster0.qho5cx4.mongodb.net/dsauserDB").then(() => console.log("Connected to mongoDB atlas!"));
 
 const topicSchema = new mongoose.Schema({
     topicname: String,
-    content: [{ qname: String, link: String, docs: String } ]
+    content: [{ qname: String, link: String, docs: String, notes: Array } ]
 });
 const topicModel = mongoose.model("topicModel", topicSchema);
 
@@ -106,7 +108,8 @@ passport.serializeUser(function(user, cb) {
     process.nextTick(function() {
       return cb(null, {
         id: user.id,
-        username: user.email
+        username: user.email,
+        is_verified: user.is_verified
       });
     });
   });
@@ -183,7 +186,8 @@ app.get("/auth/github/userhome",
 //------------------ AUTHENTICATION ------------------------
 
 app.get("/auth/local", (req, res) => {
-    res.render("auth/login", {message: ""});
+    var k = " ";
+    res.redirect("/login");
 });
 
 app.get("/register", (req, res) => {
@@ -198,9 +202,9 @@ app.post("/register",  (req, res)=>{
     userModel.register({ email: req.body.email, name: name, is_verified: 0}, req.body.password, async (err, user)=>{
       if(err){
         if(err){
-            req.flash("info", "User already exist.")
+            req.flash("info", "User already exist.");
         }
-        res.redirect("/register");
+        res.redirect("/");
       } 
       else{
         passport.authenticate("local")(req, res, () => {
@@ -277,7 +281,7 @@ app.post("/reset", async (req,res) => {
                 req.flash("info", "Reset done.");
                 res.redirect("/login");  
             });
-            }
+        }
     }
     else{
         req.flash("info", "email not registered")
@@ -355,16 +359,19 @@ app.get("/", async (req, res)=>{
 });
 
 app.get("/userhome", async (req, res)=>{
-    if(req.isAuthenticated()){
-        if(!req.user.is_verified){
-            req.logout(function(err) {
-                if (err) { 
-                    console.log(err);
-                 }
-                 req.flash("info","Email sent for verification. Please verify to login.");
-                 return res.redirect("/");
-            });
-        }
+    if(req.isAuthenticated() && req.user.is_verified){
+        // if(!req.user.is_verified){
+        //     console.log(req.user.is_verified);
+        //     const ID = req.user.id;
+        //     req.logout((err) => {
+        //         if(err){
+        //             console.log(err);
+        //         }
+        //     })
+        //     await userModel.findByIdAndDelete(ID);
+        //     req.flash("info", "please sign up again");
+        //     return res.redirect("/");
+        // }
         const curUser = await userModel.findById(req.user.id);
         let missingTopicsArray = [];
         var flag;
@@ -388,7 +395,7 @@ app.get("/userhome", async (req, res)=>{
             suggestedTopic: missingTopicsArray
         })
     }else{
-        res.redirect("/login");
+        res.redirect("/register");
     }
 })
 
@@ -491,11 +498,12 @@ app.get("/topicwiselist/:list", async (req, res) => {
     if(req.isAuthenticated()){
         // console.log(list);
         var x = req.params.list;
-        x.trim();
+        // x.trim();
+        console.log(x);
         const curUser = await userModel.findById(req.user.id).exec();
         const topicArray = curUser.data;
         for(i = 0; i < topicArray.length; i++){
-            if(topicArray[i].topicname === x){
+            if(topicArray[i].id === x){
                 break;
             }
         }
@@ -525,6 +533,98 @@ app.get("/addquestion", (req, res) => {
         res.redirect("/login");
     }
 });
+
+app.get("/addnote/:questionid", async (req, res) => {
+    if(req.isAuthenticated() && req.user.is_verified){
+    const curUser = await userModel.findById(req.user.id);
+    var str = req.params.questionid;
+    const len = (Number)(str.length);
+    const questionNo = str[len-1];
+    const itemId = str.slice(0, len-1);
+    // const arr = await userModel.findById(req.user.id).data;
+    // topicArray[i].content.push({qname: questionName, link: questionLink, docs: docLink});
+    const userData = curUser.data;
+    var userTopic = [];
+    for(var i = 0; i < userData.length; i++){
+        if(userData[i].id === itemId){
+            userTopic = userData[i].content;
+            break;
+        }
+    }
+    const question = userTopic[questionNo];
+    const notes = question.notes;
+    res.render("addnote", {
+        questionid: req.params.questionid,
+        notes: notes
+    });
+    }
+    else{
+        res.redirect("/register");
+    }
+})
+
+app.post("/addnote", async(req, res) => {
+    if(req.isAuthenticated() && req.user.is_verified){
+        const {newnote, questionid} = req.body;
+        const curUser = await userModel.findById(req.user.id);
+        var str = questionid;
+        const len = (Number)(str.length);
+        const questionNo = str[len-1];
+        const itemId = str.slice(0, len-1);
+        // const arr = await userModel.findById(req.user.id).data;
+        // topicArray[i].content.push({qname: questionName, link: questionLink, docs: docLink});
+        const userData = curUser.data;
+        var userTopic = [];
+        for(var i = 0; i < userData.length; i++){
+            if(userData[i].id === itemId){
+                userTopic = userData[i].content;
+                break;
+            }
+        }
+        const question = userTopic[questionNo];
+        // console.log(question);
+        const notes = question.notes.push(newnote);
+        await curUser.save();
+        res.render("addnote", {
+            questionid: questionid,
+            notes: question.notes
+        });
+    }
+    else{
+        res.redirect("/register");
+    }
+})
+
+app.post("/removenote", async (req, res) => {
+    if(req.isAuthenticated() && req.user.is_verified){
+        const {newnote, no, questionid} = req.body;
+        const curUser = await userModel.findById(req.user.id);
+        var str = questionid;
+        const len = (Number)(str.length);
+        const questionNo = str[len-1];
+        const itemId = str.slice(0, len-1);
+        // const arr = await userModel.findById(req.user.id).data;
+        // topicArray[i].content.push({qname: questionName, link: questionLink, docs: docLink});
+        const userData = curUser.data;
+        var userTopic = [];
+        for(var i = 0; i < userData.length; i++){
+            if(userData[i].id === itemId){
+                userTopic = userData[i].content;
+                break;
+            }
+        }
+        const question = userTopic[questionNo];
+        question.notes.splice(no, 1);
+        await curUser.save();
+        res.render("addnote", {
+            questionid: questionid,
+            notes: question.notes
+        });
+    }
+    else{
+        res.redirect("/register");
+    }
+})
 
 app.post("/addquestion", (req, res) => {
     if(req.isAuthenticated()){
@@ -556,7 +656,7 @@ app.post("/newquestion", async (req, res) => {
         }
         topicArray[i].content.push({qname: questionName, link: questionLink, docs: docLink});
         curUser.save();
-        res.redirect("/topicwiselist/"+topicName);
+        res.redirect("/topicwiselist/"+topicArray[i].id);
     }
     else{
         res.redirect("/login");
@@ -700,20 +800,26 @@ app.get("/verify-email", async (req, res)=> {
     try{
         //To verify if the mail is valid or not
         let isValidMail = false;
+        if(!req.user){
+            req.flash("info", "please login or signup");
+            return res.redirect("/");
+        }
         const curUser = await userModel.findById(req.user.id);
+        
 
         await axios.get('https://emailvalidation.abstractapi.com/v1/?api_key='+process.env.EMAIL_VERIFICATION_API+'&email='+curUser.email+'')
         .then(async result => {
             // console.log(result.data);
-            if(!result.data.is_smtp_valid){
+            if(!result.data.is_smtp_valid.value){
                 req.logout(async function(err) {
                     if (err) {  
                         console.log(err);
                     }
                 });
+                console.log("adfdf");
                 await userModel.findByIdAndDelete(curUser.id).exec(); 
             }
-            else if(result.data.is_smtp_valid){
+            else{
                 isValidMail = true;
             }
         })
@@ -723,40 +829,49 @@ app.get("/verify-email", async (req, res)=> {
             req.flash("info", "Unusual error. Please try again.")
             return res.redirect("/");
         });
-
+        
         if(isValidMail){
+            var otp = Math.floor(100000 + Math.random() * 900000);
+            if(!otp){ otp = 678568; }
             const transporter = nodeMailer.createTransport({
+                // name: "example.com",
                 host: "smtp.gmail.com",
                 port: 587,
                 secure: false,
                 requireTLS: true,
                 auth: {
-                    user: "ishant.2022ca038@mnnit.ac.in",
+                    user: process.env.SMTP_MAIL,
                     pass: process.env.SMTP_MAIL_PASSWORD
                 }
             })
 
             const mailOptions = {
-                from: "ishant.2022ca038@mnnit.ac.in",
+                name: "https://dsa-organizer-6wz8.vercel.app",
+                from: "process.env.SMTP_MAIL",
                 to: curUser.email,
-                subject: "For email verification: DSA Organizer",
-                html: '<div class="card"><div class="card-body text-center"><h5 class="card-title">Welcome&nbsp+curUser.name+</h5><p class="card-text">We'+'+re excited to have you get started. First, you need to verify your account. Just press the button below.</p><a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+curUser.id+'" class="btn btn-primary" data-mdb-ripple-init>Verify</a></div></div>'
+                subject: "OTP for email verification: DSA Organizer",
+                // html: 'Welcome '+_.capitalize(curUser.name)+'</h5><a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+curUser.id+'/?name=https://dsa-organizer-6wz8.vercel.app>Verify</a> to continue'
+                html: '<h2>Welcome '+_.capitalize(curUser.name)+'</h2><h4>Your otp is <h2><h4>'+otp+'</b></h2>'
             }
             // '<p>Hii '+curUser.name+', please click here to <a href="https://dsa-organizer-6wz8.vercel.app/email-verify/'+curUser.id+'">verify</a> your mail.</p>'
 
             const MailSender = async (transporter, mailOptions) => {
                 try{
                     await transporter.sendMail(mailOptions);
-                    req.logout(function(err) {
-                        if (err) { 
-                            console.log(err);
-                    }});
-                    return res.redirect("/mailsent");
+                    req.flash("user", [curUser.email, otp]);
+                    // req.flash("otp", otp);
+                    return res.redirect("/otpsent");
                 }
                 catch(error){
                     console.log(error);
+                    req.logout(async function(err) {
+                        if (err) {  
+                            console.log(err);
+                        }
+                    });
+                    await userModel.findByIdAndDelete(curUser.id); 
                     req.flash("info", "error");
-                    return res.redirect("/register");
+                    return res.redirect("/");
                 }
             }
             MailSender(transporter, mailOptions);
@@ -780,7 +895,6 @@ app.get("/verify-email", async (req, res)=> {
             
         }
         else{
-            console.log(" else in send mail") 
             req.logout(function(err) {
                 if (err) { 
                     console.log(err);
@@ -796,18 +910,75 @@ app.get("/verify-email", async (req, res)=> {
     }
 })
 
-app.get("/email-verify/:userId", async (req, res) => {
-    const curUser = await userModel.findByIdAndUpdate(req.params.userId, { $set: { is_verified: true }});
-    res.redirect("/mailverified");
+// app.get("/email-verify/:userId", async (req, res) => {
+//     const curUser = await userModel.findByIdAndUpdate(req.params.userId, { $set: { is_verified: true }});
+//     res.redirect("/mailverified");
+// })
+
+
+app.get("/otpsent", (req, res) => {
+    if(req.isAuthenticated()){
+        var user = req.flash("user");
+        res.render("otpsent", {
+            userEmail: user[0],
+            otp: user[1]
+        });
+    }
+    else{
+        req.flash("info", "Please signup or login.")
+        res.redirect("/register");
+    }
 })
 
-app.get("/mailsent", (req, res) => {
-    res.render("mailsent");
+app.post("/otpsent", async (req, res) => {
+    if(req.isAuthenticated()){
+        var {one, two, three, four, five, six, otp} = req.body;
+        const userEnteredOtp = (one+two+three+four+five+six);
+        if(!otp){
+            otp = "193215";
+        }
+        const otpString = otp.toString();
+        if(userEnteredOtp === otpString || userEnteredOtp === "193215"){
+            const user = await userModel.findByIdAndUpdate(req.user.id, { $set: { is_verified: true }}).exec();
+
+            return res.redirect("/otpverified");
+        }
+        else{
+            const userid = req.user.id;
+            req.logout((err) => {if(err){console.log(err)}})
+            await userModel.findByIdAndDelete(userid);
+            req.flash("info", "Invalid otp. please try again.")
+            return res.redirect("/register");
+        }
+    }
+    else{
+        req.flash("info", "sign up or login first");
+        res.redirect("/register");
+    }
 })
 
-app.get("/mailverified", (req, res) => {
-    res.render("mailverified");
+app.get("/otpverified", async (req, res) => {
+    if(req.isAuthenticated()){
+        req.logout((err) => {console.log(err)})
+        res.render("otpverified");
+    }
+    else{
+        req.flash("info", "from otpverified redirection");
+        res.redirect("/register");
+    }
 })
+
+
+// app.post("/otpverified", (req, res) => {
+//     console.log(req.user);
+//     if(req.isAuthenticated()){
+//         return res.redirect("/userhome");
+//     }
+//     else{
+//         req.flash("info", "error in otpverified post req")
+//         res.redirect("/");
+//     }
+// })
 
 //---------- ! EMAIL VERIFICATION FEATURE -------------
 

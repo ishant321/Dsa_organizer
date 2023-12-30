@@ -45,7 +45,7 @@
         </div>
         <div class="topic-list">
             <% topics.forEach(function(item){ %>
-                    <form action="/topicwiselist/<%= (item.topicname) %>" method="get">
+                    <form action="/topicwiselist/<%= (item.id) %>" method="get">
                         <button class="topic-list-button"><%= _.capitalize(item.topicname) %> (<%= item.content.length%>)</button>
                     </form>
             <% }); %>

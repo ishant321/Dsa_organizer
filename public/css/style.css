@@ -35,6 +35,45 @@ body{
     background-color: var(--color-400) !important;
 }
 
+#message {
+    display:none;
+    background: #f1f1f1;
+    color: #000;
+    position: relative;
+    width: 70%;
+    margin: auto;
+  }
+  
+  #message nav {
+    padding: 4px 35px;
+  }
+  
+  /* Add a green text color and a checkmark when the requirements are right */
+  .valid {
+    color: green;
+  }
+  
+  .valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+  }
+  
+  /* Add a red text color and an "x" when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+  
+  .invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖";
+  }
+
+  .appr{
+    font-size: 6em;
+  }
+
 
 .testimonial-card .card-up {
     height: 120px;
@@ -56,10 +95,6 @@ body{
   }
 
 /* -------------- GENERAL ----------------- */
-
-.font-btn{
-   
-}
 
 .form-btn button{
     padding: 0.3em 1.6em;
@@ -399,7 +434,7 @@ body{
 
 .features{
     width: 70%;
-    margin: 7em 3em;
+    margin: 7em 3em 3em 7em;
 }
 
 .feature-title{
@@ -790,7 +825,7 @@ li{
 .question-list-title table{
     border: 2px solid black;
     margin: 3rem auto auto auto;
-    min-width: 700px;
+    min-width: 1000px;
     overflow: scroll;
     border-collapse: collapse;
     text-align: center;
@@ -802,7 +837,7 @@ li{
 }
 
 .question-list-title th{
-    font-size: 2.8rem;
+    font-size: 2.3rem;
 }
 
 .question-list-title td{
