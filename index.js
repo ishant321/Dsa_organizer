@@ -132,7 +132,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "https://dsa-organizer-6wz8.vercel.app/auth/google/userhome"
   },
   function(accessToken, refreshToken, email, cb) {
-    userModel.findOrCreate({ email : email._json.email, googleid: email.id, name: email.displayName}, function (err, user) {
+    userModel.findOrCreate({ email : email._json.email, googleid: email.id, name: email.displayName}, {is_verified: true}, function (err, user) {
       return cb(err, user);
     });
   }
@@ -816,7 +816,6 @@ app.get("/verify-email", async (req, res)=> {
                         console.log(err);
                     }
                 });
-                console.log("adfdf");
                 await userModel.findByIdAndDelete(curUser.id).exec(); 
             }
             else{
@@ -859,10 +858,10 @@ app.get("/verify-email", async (req, res)=> {
                 try{
                     await transporter.sendMail(mailOptions);
                     req.flash("user", [curUser.email, otp]);
-                    // req.flash("otp", otp);
                     return res.redirect("/otpsent");
                 }
                 catch(error){
+                    res.send(error);
                     console.log(error);
                     req.logout(async function(err) {
                         if (err) {  
