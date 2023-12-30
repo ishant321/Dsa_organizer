@@ -263,24 +263,26 @@ app.get("/resetpassword", (req, res) => {
 
 app.post("/reset", async (req,res) => {
     const curUsername = req.body.username;
-    const pass = req.body.password;
+    const newpassword = req.body.newpassword;
     const cPass = req.body.confirmpassword;
     const curUser = await userModel.findOne({email: curUsername}).exec();
     if(curUser){
-        if(cPass != pass){
+        if(cPass != newpassword){
             res.render("auth/resetpassword",{
                 message: "password doesnot match"
             })
         }
         else{
-            curUser.setPassword(req.body.newpassword,(err, u) => {
-                if (err){
-                    console.log(err);
-                }
-                curUser.save();
-                req.flash("info", "Reset done.");
-                res.redirect("/login");  
-            });
+            await userModel.findOne({ email: curUsername })
+            .then((u) => {
+                u.setPassword(newpassword,(err, u) => {
+                    if (err) return next(err);
+                    u.save();
+                    req.flash("info", "Reset done.")
+                    return res.redirect("/login");
+                });
+
+            })
         }
     }
     else{
@@ -919,6 +921,7 @@ app.get("/otpsent", (req, res) => {
     if(req.isAuthenticated()){
         var user = req.flash("user");
         res.render("otpsent", {
+            newpassword: "",
             userEmail: user[0],
             otp: user[1]
         });
@@ -933,11 +936,8 @@ app.post("/otpsent", async (req, res) => {
     if(req.isAuthenticated()){
         var {one, two, three, four, five, six, otp} = req.body;
         const userEnteredOtp = (one+two+three+four+five+six);
-        if(!otp){
-            otp = "193215";
-        }
         const otpString = otp.toString();
-        if(userEnteredOtp === otpString || userEnteredOtp === "193215"){
+        if(userEnteredOtp === otpString){
             const user = await userModel.findByIdAndUpdate(req.user.id, { $set: { is_verified: true }}).exec();
 
             return res.redirect("/otpverified");
