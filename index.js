@@ -687,23 +687,40 @@ app.post("/removequestion", async (req, res) => {
 app.post("/deletequestion", async (req, res) => {
     if(req.isAuthenticated()){
         const curUser = await userModel.findById(req.user.id).exec();
-        const topicname = req.body.rqi;
-        const qname = req.body.qname;
-        const topicArray = curUser.data;
-        for(i = 0; i < topicArray.length; i++){
-            if(topicArray[i].topicname === req.body.rqi){
+        const {topicId, questionId} = req.body;
+        const userData = curUser.data;
+        var curTopic;
+        for(var i = 0; i < userData.length; i++){
+            if(userData[i].id == topicId){
+                curTopic = userData[i].content;
                 break;
             }
         }
-        const questionArray = topicArray[i].content;
-        for(j = 0; j < questionArray.length; j++){
-            if(questionArray[j].qname === qname){
-                break;
+        var curQuestion;
+        for(var i = 0; i < curTopic.length; i++){
+            if(curTopic[i].id == questionId){
+                curQuestion = i;
             }
         }
-        questionArray.splice(j, 1);
+        curTopic.splice(curQuestion, 1);
         curUser.save();
-        res.redirect("/topicwiselist/"+topicname);
+        // const topicname = req.body.rqi;
+        // const qname = req.body.qname;
+        // const topicArray = curUser.data;
+        // for(i = 0; i < topicArray.length; i++){
+        //     if(topicArray[i].topicname === req.body.rqi){
+        //         break;
+        //     }
+        // }
+        // const questionArray = topicArray[i].content;
+        // for(j = 0; j < questionArray.length; j++){
+        //     if(questionArray[j].qname === qname){
+        //         break;
+        //     }
+        // }
+        // questionArray.splice(j, 1);
+        // curUser.save();
+        res.redirect("/topicwiselist/"+topicId);
     }
     else{
         res.redirect("/login");

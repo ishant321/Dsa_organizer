@@ -6,16 +6,42 @@
         </div>
         <div class="remove-topic-list"> 
         <form action="/deletequestion" method="post">
-            <input type="text" style="visibility: hidden; height: 0; display: none;" name="rqi" value="<%= topicData.topicname %>"></input>
+            <input type="text" style="visibility: hidden; height: 0; display: none;" name="topicId" value="<%= topicData.id %>"></input>
             <% topicData.content.forEach(function(item){ %>
                 <div class="remove-question-set" style="margin: 2rem auto;">
                     <div><%= item.qname %></div>
-                    <button style="border-radius: 14px;" name="qname" value="<%= item.qname%>">Remove   
+
+                    <section class="modal hide" id="modalbox">
+                        <p style="font-size: 1.7rem; color: black; font-family: sans-serif; font-weight: 500;">Are you sure?</p>
+                        <span>
+                        <button type="button" class="cancel" onclick="closemodal()" id="cancelbtn">Cancel</button>
+                        <button class="confirm" name="questionId" id="confirmbtn" type="submit">Confirm</button>
+                        </span>
+                    </section>
+
+                    <button type="button" style="border-radius: 14px;" value="<%= item.id%>" onclick="modal(this)">Remove   
                     </button>
                 </div>
             <% }) %>
         </form>
         </div>
     </div>
+
+    <script>
+        function modal(obj){
+            const topicid = obj.value;
+            const confirm = document.getElementById("confirmbtn");
+            const cancel = document.getElementById("cancelbtn");
+            const modal = document.getElementById("modalbox");
+            confirm.value = topicid;
+            modal.classList.remove("hide");
+            modal.classList.add("show");
+        }
+        function closemodal(){
+            const modal = document.getElementById("modalbox");
+            modal.classList.remove("show");
+            modal.classList.add("hide");
+        }
+    </script>
 
 <%- include("partials/footer.ejs") %>

@@ -1,16 +1,25 @@
 <%- include("partials/header.ejs") %> 
 
+
+
+
 <div class="main" style="display: flex; flex-direction: column;">
     <div class="topic-title">
         <h2>TOPIC NAMES</h2>
     </div>
         <% t.forEach(function(item){ %>
-
             <div class="remove-topic-list" style="margin: 2rem auto;">
                 <form action="/remove" method="post">
+                    <section class="modal hide" id="modalbox">
+                        <p style="font-size: 1.7rem; color: black; font-family: sans-serif; font-weight: 500;">Are you sure?</p>
+                        <span>
+                        <button class="cancel" type="button" onclick="closemodal()" id="cancelbtn">Cancel</button>
+                        <button class="confirm" name="rembtn" id="confirmbtn" type="submit">Confirm</button>
+                        </span>
+                    </section>
                     <div class="remove-question-set">
                         <div><%= _.capitalize(item.topicname) %></div>
-                        <button name="rembtn" value="<%= item.topicname %>"">-</button>
+                        <button type="button" value="<%= item.topicname %>" onclick="modal(this)">-</button>
                     </div>
                 </form>
             </div>
@@ -18,5 +27,22 @@
         <% }); %>
 </div>
 
+
+<script>
+    function modal(obj){
+        const topicName = obj.value;
+        const confirm = document.getElementById("confirmbtn");
+        const cancel = document.getElementById("cancelbtn");
+        const modal = document.getElementById("modalbox");
+        confirm.value = topicName;
+        modal.classList.remove("hide");
+        modal.classList.add("show");
+    }
+    function closemodal(){
+        const modal = document.getElementById("modalbox");
+        modal.classList.remove("show");
+        modal.classList.add("hide");
+    }
+</script>
 
 <%- include("partials/footer.ejs") %>
