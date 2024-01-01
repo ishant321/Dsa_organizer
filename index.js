@@ -501,7 +501,6 @@ app.get("/topicwiselist/:list", async (req, res) => {
         // console.log(list);
         var x = req.params.list;
         // x.trim();
-        console.log(x);
         const curUser = await userModel.findById(req.user.id).exec();
         const topicArray = curUser.data;
         for(i = 0; i < topicArray.length; i++){
@@ -509,6 +508,17 @@ app.get("/topicwiselist/:list", async (req, res) => {
                 break;
             }
         }
+        function compare( a, b ) {
+            if ( a.qname > b.qname ){
+              return 1;
+            }
+            if ( a.qname < b.qname ){
+              return -1;
+            }
+            return 0;
+        }
+        // console.log(topicArray[i]);
+        topicArray[i].content.sort(compare);
         res.render("topicwiselist",{
             topicname: x,
             topicData: topicArray[i],
