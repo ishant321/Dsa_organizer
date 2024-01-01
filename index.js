@@ -684,6 +684,16 @@ app.post("/removequestion", async (req, res) => {
                 break;
             }
         }
+        function compare( a, b ) {
+            if ( a.qname > b.qname ){
+              return 1;
+            }
+            if ( a.qname < b.qname ){
+              return -1;
+            }
+            return 0;
+        }
+        topicArray[i].content.sort(compare);
         res.render("removequestion",{
             topicData: topicArray[i], 
             i: 1

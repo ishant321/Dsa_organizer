@@ -7,9 +7,9 @@
         <div class="remove-topic-list"> 
         <form action="/deletequestion" method="post">
             <input type="text" style="visibility: hidden; height: 0; display: none;" name="topicId" value="<%= topicData.id %>"></input>
-            <% topicData.content.forEach(function(item){ %>
+            <%var k = 0; topicData.content.forEach(function(item){ %>
                 <div class="remove-question-set" style="margin: 2rem auto;">
-                    <div><%= item.qname %></div>
+                    <p style="color: black; display: flex; align-items: center;"><%= k+1 %>.<% k++; %></p><div style="float: left;"><%= item.qname %></div>
 
                     <section class="modal hide" id="modalbox">
                         <p style="font-size: 1.7rem; color: black; font-family: sans-serif; font-weight: 500;">Are you sure?</p>
