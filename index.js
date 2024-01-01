@@ -38,7 +38,7 @@ var path = require("path");
 const e = require("connect-flash");
 const { read } = require("fs");
 const nodeMailer = require("nodemailer");
-const axios = require("axios");
+// const axios = require("axios");
 const cheerio = require("cheerio");
 require("dotenv").config();
 require("colors");
