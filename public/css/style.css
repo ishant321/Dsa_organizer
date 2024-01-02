@@ -104,6 +104,7 @@ body{
     border-radius: 10px;
     background-color: var(--color-900);
     transition-duration: 700ms;
+    cursor: pointer;
 }
 
 .form-btn button:hover{
@@ -328,6 +329,7 @@ body{
     font-weight: 600;
     box-shadow: 0px 0px 40px 40px var(--color-400) inset, 0 0 0 0 var(--color-400);
     transition: all 150ms ease-in-out;
+    cursor: pointer;
 }
 
 .local button:hover{
@@ -352,6 +354,7 @@ body{
 
 .open button{
     margin-bottom: 1.5em; 
+    cursor: pointer;
 }
 
 .open-btn{
@@ -369,6 +372,7 @@ body{
     font-weight: 700;
     font-size: 1.6rem;
     margin: auto auto auto 1em;
+    cursor: pointer;
 }
 
 .google-btn{
@@ -392,6 +396,7 @@ body{
 
 .google-btn, .google-btn button{
     background-color: red;
+    cursor: pointer;
 }
 
 .github-btn, .github-btn button{
@@ -399,6 +404,7 @@ body{
     color: white;
     border: 1px white;
     font-weight: 500;
+    cursor: pointer;
 }
 
 #icons{
@@ -523,6 +529,7 @@ li{
     background-color: var(--color-400);
     font-size: 1.6rem;
     transition: transform 1000ms;
+    cursor: pointer;
 }
 
 .user-actions button:hover,
@@ -687,6 +694,7 @@ li{
     border: none;
     border-radius: 10px;
     transition: 300ms;
+    cursor: pointer;
 } 
 
 .update-form button:hover{
@@ -742,6 +750,7 @@ li{
     color: white;
     font-weight: 900;
     transition: 300ms;
+    cursor: pointer;
 }
 
 .remove-topic-list button:hover{
@@ -792,6 +801,7 @@ li{
     font-weight: 600;
     min-width: 9em;
     transition: 300ms;
+    cursor: pointer;
 }
 
 .question-button-2{
@@ -806,6 +816,7 @@ li{
     color: white;
     min-width: 9em;
     transition: 300ms;
+    cursor: pointer;
 } 
 
 .question-button-1:hover{
