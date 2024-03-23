@@ -40,6 +40,7 @@ const { read } = require("fs");
 const nodeMailer = require("nodemailer");
 // const axios = require("axios");
 const cheerio = require("cheerio");
+const axios = require("axios");
 require("dotenv").config();
 require("colors");
 //---------------------------------------------------------
@@ -93,10 +94,17 @@ const userSchema = new mongoose.Schema({
     password: String,
     googleid: String,
     githubid: String,
-    is_verified: Boolean,
+    is_verified: {
+        type: Boolean,
+        default: false
+    },
+    verificationTime: {
+        type: Date,
+        default: Date.now
+    },
     data: [topicSchema]
 });
-
+userSchema.index({ verificationTime: 1, is_verified: 1 }, { expireAfterSeconds: 120, partialFilterExpression: { is_verified: false } });
 userSchema.plugin(passportLocalMongoose, {usernameField: "email"});
 userSchema.plugin(findorcreate);
 
@@ -377,6 +385,7 @@ app.get("/userhome", async (req, res)=>{
         const curUser = await userModel.findById(req.user.id);
         let missingTopicsArray = [];
         var flag;
+        console.log(req.user);
         const userTopicList = curUser.data;
         for(var i = 0; i < importantTopics.length; i++){
             flag = true;
@@ -478,16 +487,18 @@ app.get("/removetopic", async (req, res)=>{
 
 app.post("/remove", async (req, res) => {
     if(req.isAuthenticated()){
-
-        const curTopicName = req.body.rembtn;
+        const topicName = req.body.rembtn;
         const curUser = await userModel.findById(req.user.id).exec();
         const topicArray = curUser.data;
+        var i = 0;
         for(i = 0; i < topicArray.length; i++){
-            if(topicArray[i].topicname === curTopicName){
+            if(topicArray[i].topicname === topicName){
                 break;
             }
         }
         topicArray.splice(i, 1);
+        const curTopic = await topicModel.find({topicname: topicName}).exec();
+        await topicModel.findByIdAndDelete(curTopic[0].id);
         curUser.save();
         res.redirect("/userhome");
     }
@@ -983,7 +994,7 @@ app.post("/otpsent", async (req, res) => {
             req.logout((err) => {if(err){console.log(err)}})
             await userModel.findByIdAndDelete(userid);
             req.flash("info", "Invalid otp. please try again.")
-            return res.redirect("/register");
+            return res.redirect("/");
         }
     }
     else{
